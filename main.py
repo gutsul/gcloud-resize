@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import api
 
-# lsblk -o name,size,MOUNTPOINT -P
+# lsblk --output name,size,mountpoint --pairs --bytes
 # ls -l /dev/disk/by-id/google-*
 
 # sudo resize2fs /dev/[DISK_ID]
