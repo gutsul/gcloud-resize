@@ -10,5 +10,5 @@ class Disk:
     self.index = index
 
   def get_label(self):
-    result = "sd" + chr(96 + self.index)
+    result = "sd" + chr(97 + self.index)
     return result

@@ -17,6 +17,7 @@ def main():
   print("Disks:")
 
   for disk in disks:
+    print("")
     print("Name: {0}".format(disk.name))
     print("Label: {0}".format(disk.get_label()))
 
