@@ -27,15 +27,11 @@ def main():
     disk = disks.get(label)
 
     if label != BOOT_DISK:
-      print("-----------")
-      print("Label: {0}".format(label))
-      print("Name: {0}".format(disk.name))
-      print("Mountpoint: {0}".format(disk.mount_point))
-      print("Size GB: {0}".format(disk.size_gb))
-      print("Used Size GB: {0}".format(disk.used_size_gb))
+
+      print('DEBUG: ACTION="Checking disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" SIZE_GB={3} USED_GB={}'
+            .format(label, disk.name, disk.mount_point, disk.size_gb, disk.used_size_gb))
 
       if disk.is_full():
-        print("Disk {0} have low disk space.".format(disk.name))
         api.resize_disk(disk, zone=ZONE)
         utils.apply_disk_changes(disk)
 

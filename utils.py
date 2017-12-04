@@ -37,6 +37,7 @@ def get_size_gb(start_path='.'):
   return convert_to_gb(total_size)
 
 
+# TODO: Show error
 def shell(cmd):
   output = None
 
@@ -46,6 +47,9 @@ def shell(cmd):
 
     output = output.decode("utf-8")
     error = error.decode("utf-8")
+
+    print('DEBUG: ACTION="Run shell" COMMAND="{0}" OUT="{1}" ERR="{2}"'
+          .format(cmd, output, error))
 
   except:
     print("Cannot run command: {0}".format(cmd))
