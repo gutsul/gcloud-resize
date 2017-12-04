@@ -11,9 +11,6 @@ def main():
   ZONE = api.get_geo_zone()
   disks = api.get_attached_disks()
 
-  print("Instance Name: {0}".format(INSTANCE_NAME))
-  print("Zone: {0}".format(ZONE))
-
   output = utils.get_blocked_device()
 
   for line in output.splitlines():
@@ -38,9 +35,9 @@ def main():
       print("Used Size GB: {0}".format(disk.used_size_gb))
 
       if disk.is_full():
-        new_size = disk.cal_new_size_gb()
         print("Disk {0} have low disk space.".format(disk.name))
-
+        api.resize_disk(disk, zone=ZONE)
+        utils.apply_disk_changes(disk)
 
 if __name__ == '__main__':
   main()

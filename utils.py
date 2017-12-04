@@ -2,10 +2,8 @@ import subprocess
 import os
 import re
 
-import math
 
 from models import Disk
-from settings import RESIZE_PERCENT
 
 
 def parse_geo_zone(line):
@@ -55,7 +53,8 @@ def shell(cmd):
   return output
 
 
-def apply_disk_changes(label):
+def apply_disk_changes(disk):
+  label = disk.get_label
   cmd = "sudo resize2fs /dev/{0}".format(label)
   shell(cmd)
 
