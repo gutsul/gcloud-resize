@@ -2,7 +2,10 @@ import subprocess
 import os
 import re
 
+import math
+
 from models import Disk
+from settings import RESIZE_PERCENT
 
 
 def parse_geo_zone(line):
@@ -26,14 +29,14 @@ def parse_disks(json):
   return disks
 
 
-def get_size_mb(start_path='.'):
+def get_size_gb(start_path='.'):
   total_size = 0
   for dirpath, dirnames, filenames in os.walk(start_path):
     for f in filenames:
       fp = os.path.join(dirpath, f)
       total_size += os.path.getsize(fp)
 
-  return convert_to_mb(total_size)
+  return convert_to_gb(total_size)
 
 
 def shell(cmd):
@@ -75,11 +78,9 @@ def parse_device_info(line):
   return label, size, mountpoint
 
 
-def convert_to_mb(bytes):
-  BYTES_IN_MEGABYTE = 1048576
-  return int(bytes) / BYTES_IN_MEGABYTE
-
-
+def convert_to_gb(bytes):
+  BYTES_IN_GIGABYTE = 1073741824
+  return int(bytes) / BYTES_IN_GIGABYTE
 
 
 
