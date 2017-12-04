@@ -58,7 +58,7 @@ def shell(cmd):
 
 
 def apply_disk_changes(disk):
-  label = disk.get_label
+  label = disk.get_label()
   cmd = "sudo resize2fs /dev/{0}".format(label)
   shell(cmd)
 

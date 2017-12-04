@@ -28,7 +28,7 @@ def main():
 
     if label != BOOT_DISK:
 
-      print('DEBUG: ACTION="Checking disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" SIZE_GB={3} USED_GB={}'
+      print('DEBUG: ACTION="Checking disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" SIZE_GB={3} USED_GB={4}'
             .format(label, disk.name, disk.mount_point, disk.size_gb, disk.used_size_gb))
 
       if disk.is_full():
