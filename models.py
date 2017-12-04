@@ -22,7 +22,7 @@ class Disk:
     free_gb = self.size_gb - self.used_size_gb
     free_perc = math.floor((free_gb / self.size_gb) * 100)
 
-    print("Free MB: {0}".format(free_gb))
+    print("Free GB: {0}".format(free_gb))
     print("Free %: {0}".format(free_perc))
 
     if free_perc < FREE_LIMIT_PERCENT:
