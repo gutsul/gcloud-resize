@@ -67,7 +67,7 @@ def get_blocked_device():
 
 
 def parse_device_info(line):
-  regex = re.compile('NAME="([a-z\d]*)" SIZE="(\d*)" MOUNTPOINT="([a-z\/]*|[A-Z\[\]]*)"')
+  regex = re.compile('NAME="([a-z\d]*)" SIZE="(\d*)" MOUNTPOINT="([\w\/]*)"')
   search = regex.search(line)
 
   label = search.group(1)
