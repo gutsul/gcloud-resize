@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import math
 
 import api
 import utils
@@ -13,31 +14,36 @@ def main():
 
   output = utils.get_blocked_device()
 
+  # Set mountpoints
   for line in output.splitlines():
-    label, size, mountpoint = utils.parse_device_info(line)
+    label, mountpoint = utils.parse_device_info(line)
 
     disk = disks.get(label)
 
     if disk is not None:
       disk.mount_point = mountpoint
-      disk.size_gb = utils.convert_to_gb(size)
-      disk.used_size_gb = utils.get_size_gb(start_path=mountpoint)
 
+  # check disks
   for label in disks.keys():
     disk = disks.get(label)
 
     if label != BOOT_DISK:
+      usage = disk.usage()
 
-      print('DEBUG: ACTION="Checking disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" SIZE_GB={3} USED_GB={4}'
-            .format(label, disk.name, disk.mount_point, disk.size_gb, disk.used_size_gb))
+      print("usage total: {0}".format(usage.total))
+      print("usage used: {0}".format(usage.used))
 
-      if disk.is_full():
+      total_gb = utils.to_gb(usage.total)
+      used_gb = utils.to_gb(usage.used)
+      print('DEBUG: ACTION="Checking disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" TOTAL_GB={3} USED_GB={4}'
+            .format(label, disk.name, disk.mount_point, total_gb, used_gb))
+
+      if disk.is_low():
         api.resize_disk(disk, zone=ZONE)
         utils.apply_disk_changes(disk)
 
 if __name__ == '__main__':
-  main()
-
+    main()
 
 
 

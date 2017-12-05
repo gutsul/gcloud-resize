@@ -1,7 +1,5 @@
 import subprocess
-import os
 import re
-
 
 from models import Disk
 
@@ -25,16 +23,6 @@ def parse_disks(json):
     disks[disk.get_label()] = disk
 
   return disks
-
-
-def get_size_gb(start_path='.'):
-  total_size = 0
-  for dirpath, dirnames, filenames in os.walk(start_path):
-    for f in filenames:
-      fp = os.path.join(dirpath, f)
-      total_size += os.path.getsize(fp)
-
-  return convert_to_gb(total_size)
 
 
 # TODO: Show error
@@ -64,26 +52,26 @@ def apply_disk_changes(disk):
 
 
 def get_blocked_device():
-  cmd = "lsblk --output name,size,mountpoint --pairs --bytes"
+  cmd = "lsblk --output name,mountpoint --pairs --bytes"
   result = shell(cmd)
 
   return result
 
 
 def parse_device_info(line):
-  regex = re.compile('NAME="([a-z\d]*)" SIZE="(\d*)" MOUNTPOINT="([\w\/]*)"')
+  regex = re.compile('NAME="([a-z\d]*)" MOUNTPOINT="([\w\/]*)"')
   search = regex.search(line)
 
   label = search.group(1)
-  size = search.group(2)
-  mountpoint = search.group(3)
+  mountpoint = search.group(2)
 
-  return label, size, mountpoint
+  return label, mountpoint
 
 
-def convert_to_gb(bytes):
-  BYTES_IN_GIGABYTE = 1073741824
+def to_gb(bytes):
+  BYTES_IN_MEGABYTE = 1048576
+  BYTES_IN_GIGABYTE = BYTES_IN_MEGABYTE * 1000
+  # BYTES_IN_GIGABYTE = 1073741824
+
   return int(bytes) / BYTES_IN_GIGABYTE
-
-
 
