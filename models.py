@@ -55,7 +55,7 @@ class Disk:
     free_percent = 100 - usage.percent
 
     if free_percent < FREE_LIMIT_PERCENT:
-      print('DEBUG: ACTION="Low disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" FREE_GB={3} FREE_%={4}'
+      print('DEBUG: ACTION="Low disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" FREE_GB={3} USED_%={4}'
             .format(self.get_label(), self.name, self.mount_point, free_gb, usage.percent))
       return True
     else:

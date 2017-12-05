@@ -1,5 +1,8 @@
 # Customized settings
 
+# GCload Project ID
+PROJECT_ID = 'adlithium-1289'
+
 # Resize disk when free disk space < <FREE_LIMIT_PERCENT>
 FREE_LIMIT_PERCENT = 10
 

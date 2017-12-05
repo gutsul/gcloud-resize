@@ -1,12 +1,10 @@
-from pprint import pprint
-
 from googleapiclient import discovery
 
 import utils
 import requests
 import time
+from settings import PROJECT_ID
 
-PROJECT_ID = 'adlithium-1289'
 service = discovery.build('compute', 'v1')
 
 root_url = 'http://metadata.google.internal/computeMetadata/v1/instance/'
