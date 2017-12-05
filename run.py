@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-import math
-
-import api
-import utils
+from src import api, utils
 
 BOOT_DISK = "sda"
 

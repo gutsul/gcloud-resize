@@ -1,11 +1,13 @@
 import math
-import sys
 import os
+import sys
 
-import utils
-from settings import FREE_LIMIT_PERCENT, RESIZE_PERCENT
 from psutil._common import usage_percent, sdiskusage
 from psutil._compat import PY3, unicode
+
+from settings import FREE_LIMIT_PERCENT, RESIZE_PERCENT
+from src import utils
+
 
 class Disk:
   name = None

@@ -1,9 +1,10 @@
+import time
+
+import requests
 from googleapiclient import discovery
 
-import utils
-import requests
-import time
 from settings import PROJECT_ID
+from src import utils
 
 service = discovery.build('compute', 'v1')
 

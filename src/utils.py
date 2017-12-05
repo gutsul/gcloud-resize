@@ -1,7 +1,7 @@
-import subprocess
 import re
+import subprocess
 
-from models import Disk
+from src.models import Disk
 
 
 def parse_geo_zone(line):
