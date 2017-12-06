@@ -25,17 +25,12 @@ def main():
     disk = disks.get(label)
 
     if label != BOOT_DISK:
-      usage = disk.usage()
-
-      print("usage total: {0}".format(usage.total))
-      print("usage used: {0}".format(usage.used))
-
-      total_gb = utils.to_gb(usage.total)
-      used_gb = utils.to_gb(usage.used)
-      print('DEBUG: ACTION="Checking disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" TOTAL_GB={3} USED_GB={4}'
-            .format(label, disk.name, disk.mount_point, total_gb, used_gb))
 
       if disk.is_low():
+
+        print('DEBUG: ACTION="Low disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}"'
+              .format(disk.get_label(), disk.name, disk.mount_point))
+
         api.resize_disk(disk, zone=ZONE)
         utils.apply_disk_changes(disk)
 

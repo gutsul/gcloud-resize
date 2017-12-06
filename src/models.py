@@ -53,12 +53,15 @@ class Disk:
 
   def is_low(self):
     usage = self.usage()
+
+    total_gb = math.ceil(utils.to_gb(usage.total))
     free_gb = utils.to_gb(usage.free)
     free_percent = 100 - usage.percent
 
+    print('DEBUG: ACTION="Checking disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" TOTAL_GB={3} USED_GB={4} FREE_GB={5} FREE_%={6}'
+          .format(self.get_label(), self.name, self.mount_point, total_gb, free_gb, free_percent))
+
     if free_percent < FREE_LIMIT_PERCENT:
-      print('DEBUG: ACTION="Low disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" FREE_GB={3} USED_%={4}'
-            .format(self.get_label(), self.name, self.mount_point, free_gb, usage.percent))
       return True
     else:
       return False
