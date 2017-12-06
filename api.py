@@ -3,8 +3,8 @@ import time
 import requests
 from googleapiclient import discovery
 
+import utils
 from settings import PROJECT_ID
-from src import utils
 
 service = discovery.build('compute', 'v1')
 
@@ -75,7 +75,6 @@ def resize_disk(disk, zone):
 
 
 def wait_for_operation(compute, project, zone, operation):
-    print('Waiting for operation to finish...')
     while True:
       result = compute.zoneOperations().get(
         project=project,
@@ -84,7 +83,8 @@ def wait_for_operation(compute, project, zone, operation):
 
       status = result['status']
 
-      print('DEBUG: OPERATION="wait resize" STATUS="{0}"'.format(status))
+      msg = 'DEBUG: OPERATION="wait resize" STATUS="{0}"'.format(status)
+      utils.log(msg)
 
       if status == 'DONE':
         if 'error' in result:

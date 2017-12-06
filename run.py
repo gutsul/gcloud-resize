@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-from src import api, utils
+
+import api
+import utils
 
 BOOT_DISK = "sda"
 
@@ -28,14 +30,15 @@ def main():
 
       if disk.is_low():
 
-        print('DEBUG: ACTION="Low disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}"'
-              .format(disk.get_label(), disk.name, disk.mount_point))
+        msg = 'DEBUG: ACTION="Low disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}"'\
+          .format(disk.get_label(), disk.name, disk.mount_point)
+        utils.log(msg)
 
         api.resize_disk(disk, zone=ZONE)
         utils.apply_disk_changes(disk)
 
 if __name__ == '__main__':
-    main()
+  main()
 
 
 

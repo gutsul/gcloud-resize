@@ -5,8 +5,8 @@ import sys
 from psutil._common import usage_percent, sdiskusage
 from psutil._compat import PY3, unicode
 
+import utils
 from settings import FREE_LIMIT_PERCENT, RESIZE_PERCENT
-from src import utils
 
 
 class Disk:
@@ -58,8 +58,9 @@ class Disk:
     free_gb = utils.to_gb(usage.free)
     free_percent = 100 - usage.percent
 
-    print('DEBUG: ACTION="Checking disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" TOTAL_GB={3} USED_GB={4} FREE_GB={5} FREE_%={6}'
-          .format(self.get_label(), self.name, self.mount_point, total_gb, free_gb, free_percent))
+    msg = 'DEBUG: ACTION="Checking disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" TOTAL_GB={3} USED_GB={4} FREE_GB={5} FREE_%={6}'\
+          .format(self.get_label(), self.name, self.mount_point, total_gb, free_gb, free_percent)
+    utils.log(msg)
 
     if free_percent < FREE_LIMIT_PERCENT:
       return True
@@ -73,7 +74,8 @@ class Disk:
     add_size_gb = math.ceil((RESIZE_PERCENT / 100) * total_gb)
     new_size_gb = total_gb + add_size_gb
 
-    print('DEBUG: ACTION="New disk size" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" ADD_GB={3} NEW_SIZE_GB={4}'
-          .format(self.get_label(), self.name, self.mount_point, add_size_gb, new_size_gb))
+    msg = 'DEBUG: ACTION="New disk size" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" ADD_GB={3} NEW_SIZE_GB={4}'\
+          .format(self.get_label(), self.name, self.mount_point, add_size_gb, new_size_gb)
+    utils.log(msg)
 
     return new_size_gb

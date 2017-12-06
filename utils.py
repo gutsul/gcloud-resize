@@ -1,7 +1,9 @@
 import re
 import subprocess
 
-from src.models import Disk
+import syslog
+
+from models import Disk
 
 
 def parse_geo_zone(line):
@@ -25,7 +27,6 @@ def parse_disks(json):
   return disks
 
 
-# TODO: Show error
 def shell(cmd):
   output = None
 
@@ -36,11 +37,12 @@ def shell(cmd):
     output = output.decode("utf-8")
     error = error.decode("utf-8")
 
-    print('DEBUG: ACTION="Run shell" COMMAND="{0}" OUT="{1}" ERR="{2}"'
-          .format(cmd, output, error))
-
+    msg = 'DEBUG: ACTION="Run shell" COMMAND="{0}" OUT="{1}" ERR="{2}"'\
+          .format(cmd, output, error)
+    log(msg)
   except:
-    print("Cannot run command: {0}".format(cmd))
+    msg = "Cannot run command: {0}".format(cmd)
+    log(msg)
 
   return output
 
@@ -75,3 +77,6 @@ def to_gb(bytes):
 
   return int(bytes) / BYTES_IN_GIGABYTE
 
+
+def log(message):
+  syslog.syslog(syslog.LOG_DEBUG, message)
