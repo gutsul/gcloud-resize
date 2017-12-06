@@ -85,7 +85,7 @@ def wait_for_operation(compute, project, zone, operation):
 
       status = result['status']
 
-      msg = 'DEBUG: OPERATION="wait resize" STATUS="{0}"'.format(status)
+      msg = 'DEBUG: ACTION="wait resize" STATUS="{0}"'.format(status)
       utils.log(msg)
 
       if status == 'DONE':
