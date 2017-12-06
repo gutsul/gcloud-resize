@@ -24,13 +24,12 @@ def run(cmd):
   return output
 
 
-def apply_disk_changes(disk):
-  label = disk.get_label()
+def resize_disk(label):
   cmd = "sudo resize2fs /dev/{0}".format(label)
   run(cmd)
 
 
-def get_blocked_device():
+def get_block_devices():
   cmd = "lsblk --output name,mountpoint --pairs --bytes"
   result = run(cmd)
 

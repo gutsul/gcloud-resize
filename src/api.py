@@ -54,12 +54,11 @@ def get_attached_disks():
   return disks
 
 
-def resize_disk(disk, zone):
-  new_size = disk.cal_new_size_gb()
-  name = disk.name
+# TODO: Refactor it
+def resize_disk(name, size_gb, zone):
 
   disks_resize_request_body = {
-    "sizeGb": new_size
+    "sizeGb": size_gb
   }
 
   request = service.disks().resize(project=PROJECT_ID, zone=zone, disk=name, body=disks_resize_request_body)
@@ -68,7 +67,7 @@ def resize_disk(disk, zone):
   result = wait_for_operation(service, project=PROJECT_ID, zone=zone, operation=response['name'])
 
   print('DEBUG: ACTION="GCloud resize" NAME="{0}" NEW_SIZE={1} RESPONSE="{2}"'
-        .format(name, new_size, result))
+        .format(name, size_gb, result))
 
 
 def wait_for_operation(compute, project, zone, operation):
