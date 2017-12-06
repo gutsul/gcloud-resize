@@ -4,7 +4,7 @@ import requests
 from googleapiclient import discovery
 
 from settings import PROJECT_ID
-from src import utils
+from src import utils, parser
 
 service = discovery.build('compute', 'v1')
 
@@ -22,10 +22,6 @@ def get_instance_name():
     get_instance_name()
 
   name = resp.text
-
-  msg = 'DEBUG: ACTION="Get instance name" INSTANCE="{0}"'.format(name)
-  utils.log(msg)
-
   return name
 
 
@@ -38,12 +34,10 @@ def get_geo_zone():
     time.sleep(1)
     get_geo_zone()
 
-  result = utils.parse_geo_zone(resp.text)
+  # TODO: Perhaps need to move
+  geo_zone = parser.parse_geo_zone(resp.text)
 
-  msg = 'DEBUG: ACTION="Get geo zone" ZONE="{0}"'.format(result)
-  utils.log(msg)
-
-  return result
+  return geo_zone
 
 
 def get_attached_disks():
@@ -55,7 +49,8 @@ def get_attached_disks():
     time.sleep(1)
     get_attached_disks()
 
-  disks = utils.parse_disks(json=resp.json())
+  # TODO: Perhaps need to move
+  disks = parser.parse_disks(json=resp.json())
   return disks
 
 

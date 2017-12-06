@@ -6,6 +6,7 @@ from psutil._common import usage_percent, sdiskusage
 from psutil._compat import PY3, unicode
 
 from settings import FREE_LIMIT_PERCENT, RESIZE_PERCENT
+from src.utils import to_gb
 
 
 class Disk:
@@ -56,9 +57,9 @@ class Disk:
   def is_low(self):
     usage = self.usage()
 
-    # total_gb = math.ceil(utils.to_gb(usage.total))
-    # used_gb = math.ceil(utils.to_gb(usage.used))
-    # free_gb = utils.to_gb(usage.free)
+    total_gb = math.ceil(to_gb(usage.total))
+    used_gb = math.ceil(to_gb(usage.used))
+    free_gb = math.ceil(to_gb(usage.free))
     free_percent = 100 - usage.percent
 
     msg = 'DEBUG: ACTION="Checking disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" TOTAL_GB={3} USED_GB={4} FREE_GB={5} FREE_%={6}'\
