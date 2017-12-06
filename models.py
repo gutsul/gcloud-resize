@@ -55,11 +55,12 @@ class Disk:
     usage = self.usage()
 
     total_gb = math.ceil(utils.to_gb(usage.total))
+    used_gb = math.ceil(utils.to_gb(usage.used))
     free_gb = utils.to_gb(usage.free)
     free_percent = 100 - usage.percent
 
     msg = 'DEBUG: ACTION="Checking disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" TOTAL_GB={3} USED_GB={4} FREE_GB={5} FREE_%={6}'\
-          .format(self.get_label(), self.name, self.mount_point, total_gb, free_gb, free_percent)
+          .format(self.get_label(), self.name, self.mount_point, total_gb, used_gb, free_gb, free_percent)
     utils.log(msg)
 
     if free_percent < FREE_LIMIT_PERCENT:
