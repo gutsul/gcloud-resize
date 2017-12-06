@@ -23,7 +23,8 @@ def get_instance_name():
 
   name = resp.text
 
-  print('DEBUG: ACTION="Get instance name" INSTANCE="{0}"'.format(name))
+  msg = 'DEBUG: ACTION="Get instance name" INSTANCE="{0}"'.format(name)
+  utils.log(msg)
 
   return name
 
@@ -39,7 +40,8 @@ def get_geo_zone():
 
   result = utils.parse_geo_zone(resp.text)
 
-  print('DEBUG: ACTION="Get geo zone" ZONE="{0}"'.format(result))
+  msg = 'DEBUG: ACTION="Get geo zone" ZONE="{0}"'.format(result)
+  utils.log(msg)
 
   return result
 
