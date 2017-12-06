@@ -5,7 +5,6 @@ import sys
 from psutil._common import usage_percent, sdiskusage
 from psutil._compat import PY3, unicode
 
-import utils
 from settings import FREE_LIMIT_PERCENT, RESIZE_PERCENT
 
 
@@ -22,6 +21,7 @@ class Disk:
     result = "sd" + chr(97 + self.index)
     return result
 
+  # TODO: refactor it
   def usage(self):
     """Return disk usage associated with path."""
 
@@ -51,16 +51,20 @@ class Disk:
     # http://goo.gl/sWGbH
     return sdiskusage(total, used, free, percent)
 
+
+  # TODO: Refactor it
   def is_low(self):
     usage = self.usage()
 
-    total_gb = math.ceil(utils.to_gb(usage.total))
-    used_gb = math.ceil(utils.to_gb(usage.used))
-    free_gb = utils.to_gb(usage.free)
+    # total_gb = math.ceil(utils.to_gb(usage.total))
+    # used_gb = math.ceil(utils.to_gb(usage.used))
+    # free_gb = utils.to_gb(usage.free)
     free_percent = 100 - usage.percent
 
     msg = 'DEBUG: ACTION="Checking disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" TOTAL_GB={3} USED_GB={4} FREE_GB={5} FREE_%={6}'\
           .format(self.get_label(), self.name, self.mount_point, total_gb, used_gb, free_gb, free_percent)
+
+    from src import utils
     utils.log(msg)
 
     if free_percent < FREE_LIMIT_PERCENT:
@@ -68,9 +72,12 @@ class Disk:
     else:
       return False
 
+
+  # TODO: Refactor it
   def cal_new_size_gb(self):
     usage = self.usage()
 
+    from src import utils
     total_gb = math.ceil(utils.to_gb(usage.total))
     add_size_gb = math.ceil((RESIZE_PERCENT / 100) * total_gb)
     new_size_gb = total_gb + add_size_gb

@@ -1,9 +1,12 @@
+import json
 import re
 import subprocess
-
 import syslog
 
-from models import Disk
+import requests
+
+from settings import SLACK_URL
+from src.models import Disk
 
 
 def parse_geo_zone(line):
@@ -80,3 +83,36 @@ def to_gb(bytes):
 
 def log(message):
   syslog.syslog(syslog.LOG_DEBUG, message)
+
+
+def jarvis_say():
+  payload = {
+  "attachments": [
+    {
+      "color": "good",
+      "title": "Test message",
+      "title_link": "link",
+      "pretext": "<@ygrigortsevich> <@victordementiev> <@alexander>",
+      "text": "Added *10 GB* to disk *postgres-data-3* (_now used: 68.5 %_)",
+      "mrkdwn_in": [
+        "text"
+      ],
+      "fields": [
+		    {
+          "title": "Instance",
+          "value": "front-us-east",
+          "short": "True"
+        },
+        {
+          "title": "Environment",
+          "value": "Production",
+          "short": "True"
+        }
+      ]
+    }
+  ]
+  }
+
+  r = requests.post(SLACK_URL, data=json.dumps(payload))
+  print(r.text)
+  print(r.status_code)

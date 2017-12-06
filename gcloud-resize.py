@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-import api
-import utils
+from src import api
+from src import utils
+
 
 BOOT_DISK = "sda"
 
@@ -36,6 +37,7 @@ def main():
 
         api.resize_disk(disk, zone=ZONE)
         utils.apply_disk_changes(disk)
+
 
 if __name__ == '__main__':
   main()

@@ -3,8 +3,8 @@ import time
 import requests
 from googleapiclient import discovery
 
-import utils
 from settings import PROJECT_ID
+from src import utils
 
 service = discovery.build('compute', 'v1')
 
