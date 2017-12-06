@@ -6,7 +6,7 @@ from psutil._common import usage_percent, sdiskusage
 from psutil._compat import PY3, unicode
 
 from settings import FREE_LIMIT_PERCENT, RESIZE_PERCENT
-from src.utils import to_gb
+from src.utils import to_gb, log
 
 
 class Disk:
@@ -65,8 +65,8 @@ class Disk:
     msg = 'DEBUG: ACTION="Checking disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" TOTAL_GB={3} USED_GB={4} FREE_GB={5} FREE_%={6}'\
           .format(self.get_label(), self.name, self.mount_point, total_gb, used_gb, free_gb, free_percent)
 
-    from src import utils
-    utils.log(msg)
+
+    log(msg)
 
     if free_percent < FREE_LIMIT_PERCENT:
       return True
