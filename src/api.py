@@ -34,7 +34,6 @@ def get_geo_zone():
     time.sleep(1)
     get_geo_zone()
 
-  # TODO: Perhaps need to move
   geo_zone = parser.parse_geo_zone(resp.text)
 
   return geo_zone
@@ -49,12 +48,11 @@ def get_attached_disks():
     time.sleep(1)
     get_attached_disks()
 
-  # TODO: Perhaps need to move
   disks = parser.parse_disks(json=resp.json())
+
   return disks
 
 
-# TODO: Refactor it
 def resize_disk(name, size_gb, zone):
 
   disks_resize_request_body = {
