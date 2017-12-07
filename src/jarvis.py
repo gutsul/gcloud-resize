@@ -2,14 +2,13 @@ import json
 
 import requests
 
-from settings import SLACK_URL
+from settings import SLACK_URL, SLACK_USERS
 from src.utils import log
 
 
 def say(instance, environment, disk):
   title = "Disk resize"
 
-  recepients = "<@ygrigortsevich> <@victordementiev> <@alexander>"
 
   message = "Added *{0} GB* to disk *{1}* (_now used: {2} %_)".format(disk.add_gb, disk.name, disk.percent)
 
@@ -19,7 +18,7 @@ def say(instance, environment, disk):
       "color": "good",
       "title": title,
       "title_link": "link",
-      "pretext": recepients,
+      "pretext": SLACK_USERS,
       "text": message,
       "mrkdwn_in": [
         "text"
