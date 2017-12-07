@@ -54,8 +54,8 @@ Location `/usr/src/gcloud-resize/settings.py`
 | `PROJECT_ID`         | String  | 'MyProject27'                          | Required.   |
 | `FREE_LIMIT_PERCENT` | Integer | 1 ... 99                               | Required.   |
 | `RESIZE_PERCENT`     | Integer | 1 ... 100                              | Required.   |
-| `SLACK_URL`          | String  | 'https://hooks.slack.com/'             | Required.   |
-| `SLACK_USERS`        | String  | '<@ygrigortsevich> <@victordementiev>' | Required.   |
+| `SLACK_URL`          | String  | 'https://hooks.slack.com/'             | Required. Slack incoming webhook url.  |
+| `SLACK_USERS`        | String  | '<@ygrigortsevich> <@victordementiev>' | Required. Users who will be notified about the resize message.   |
 
 
 ## Debug logs
