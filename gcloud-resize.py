@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-import math
 
 from settings import RESIZE_PERCENT
-from src import api, parser, shell, utils
+from src import api, parser, shell, utils, jarvis
 from src.utils import show
 
 
@@ -68,4 +67,6 @@ def analyze(disks):
 
 
 if __name__ == '__main__':
-  main()
+  # main()
+
+  jarvis.say()

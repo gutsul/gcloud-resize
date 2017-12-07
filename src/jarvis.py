@@ -3,29 +3,37 @@ import json
 import requests
 
 from settings import SLACK_URL
+from src.utils import log
 
 
-def jarvis_say():
+def say():
+  title = "Test message"
+  recepients = "<@ygrigortsevich> <@victordementiev> <@alexander>"
+  message = "Added *10 GB* to disk *postgres-data-3* (_now used: 68.5 %_)"
+
+  instance = "test-us-east"
+  environment = "Test"
+
   payload = {
   "attachments": [
     {
       "color": "good",
-      "title": "Test message",
+      "title": title,
       "title_link": "link",
-      "pretext": "<@ygrigortsevich> <@victordementiev> <@alexander>",
-      "text": "Added *10 GB* to disk *postgres-data-3* (_now used: 68.5 %_)",
+      "pretext": recepients,
+      "text": message,
       "mrkdwn_in": [
         "text"
       ],
       "fields": [
 		    {
           "title": "Instance",
-          "value": "front-us-east",
+          "value": instance,
           "short": "True"
         },
         {
           "title": "Environment",
-          "value": "Production",
+          "value": environment,
           "short": "True"
         }
       ]
@@ -34,5 +42,6 @@ def jarvis_say():
   }
 
   r = requests.post(SLACK_URL, data=json.dumps(payload))
-  print(r.text)
-  print(r.status_code)
+
+  msg = 'DEBUG ACTION="JARVIS Say" CODE={0} STATUS="{1}"'.format(r.status_code, r.text)
+  log(message=msg)
