@@ -7,6 +7,12 @@ from src.utils import show
 INSTANCE = api.get_instance_name()
 ZONE = api.get_geo_zone()
 
+data = api.get_instance(instance=INSTANCE, zone=ZONE)
+try:
+  ENVIRONMENT = data["labels"]["environment"]
+except:
+  ENVIRONMENT = "Unknown"
+
 
 def main():
   disks = api.get_attached_disks()
@@ -28,7 +34,7 @@ def check_disks(disks):
         resize_disk(disk)
 
         analyze_usage(disk)
-        jarvis.say(instance=INSTANCE, disk=disk)
+        jarvis.say(instance=INSTANCE, environment=ENVIRONMENT, disk=disk)
 
 
 def resize_disk(disk):

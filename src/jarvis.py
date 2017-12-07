@@ -6,14 +6,12 @@ from settings import SLACK_URL
 from src.utils import log
 
 
-def say(instance, disk):
+def say(instance, environment, disk):
   title = "Disk resize"
 
   recepients = "<@ygrigortsevich> <@victordementiev> <@alexander>"
 
   message = "Added *{0} GB* to disk *{1}* (_now used: {2} %_)".format(disk.add_gb, disk.name, disk.percent)
-
-  environment = "Test"
 
   payload = {
   "attachments": [

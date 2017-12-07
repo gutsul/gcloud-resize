@@ -12,6 +12,8 @@ root_url = 'http://metadata.google.internal/computeMetadata/v1/instance/'
 METADATA_HEADERS = {'Metadata-Flavor': 'Google'}
 
 
+# TODO: All methods must return json. Remove parse methods.
+
 def get_instance_name():
   url = root_url + "name"
 
@@ -51,6 +53,12 @@ def get_attached_disks():
   disks = parser.parse_disks(json=resp.json())
 
   return disks
+
+
+def get_instance(instance, zone):
+  request = service.instances().get(project=PROJECT_ID, zone=zone, instance=instance)
+  response = request.execute()
+  return response
 
 
 def resize_disk(name, size_gb, zone):
