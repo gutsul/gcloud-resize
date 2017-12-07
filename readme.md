@@ -1,4 +1,4 @@
-# GCloud resize tool v1.0
+# GCloud resize tool v0.7
 
 `gcloud-resize` is tool that can automatically resize persistent disks on **Google Cloud Platform**.
 
@@ -47,6 +47,7 @@ sudo pip3 install -r requirements.txt
 ```
 
 ## Settings
+Location `/usr/src/gcloud-resize/settings.py`
 
 | Key                  | Type    | Value Example                          | Description |
 | :------------------- | :-----: | -------------------------------------- | ----------- |
