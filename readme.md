@@ -51,7 +51,7 @@ Location `/usr/src/gcloud-resize/settings.py`
 
 | Key                  | Type    | Value Example                          | Description |
 | :------------------- | :-----: | -------------------------------------- | ----------- |
-| `PROJECT_ID`         | String  | 'MyProject27'                          | **Required**.   |
+| `PROJECT_ID`         | String  | 'MyProject27'                          | **Required**. Google project id. More detail see [here](https://support.google.com/cloud/answer/6158840?hl=en).|
 | `FREE_LIMIT_PERCENT` | Integer | 1 ... 99                               | **Required**. Indicates available disc space threshold at which disc space will be automatically increased.<br>The value should be greater than zero. |
 | `RESIZE_PERCENT`     | Integer | 2 ... 100                              | **Required**. Determines how much in percentage you should increase the disk when low disk space amount is detected. <br> The value should be greater than `FREE_LINIT_PERCENT`.<br>The minimum disk space you can add is **1 GB**.|
 | `SLACK_URL`          | String  | 'https://hooks.slack.com/'             | **Required**. Slack incoming webhook url.  |
