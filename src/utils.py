@@ -2,6 +2,8 @@ import os
 import syslog
 
 import sys
+
+import math
 from psutil._common import usage_percent, sdiskusage
 from psutil._compat import PY3, unicode
 
@@ -41,3 +43,14 @@ def disk_usage(path):
 
 def log(message):
   syslog.syslog(syslog.LOG_DEBUG, message)
+
+
+def show(action, disk):
+  total_gb = math.ceil(to_gb(disk.total))
+  used_gb = math.ceil(to_gb(disk.used))
+  free_gb = math.ceil(to_gb(disk.free))
+  free_percent = 100 - disk.percent
+
+  msg = 'DEBUG: ACTION="{7}" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" TOTAL_GB={3} USED_GB={4} FREE_GB={5} FREE_%={6}' \
+    .format(disk.get_label(), disk.name, disk.mount_point, total_gb, used_gb, free_gb, free_percent, action)
+  log(msg)

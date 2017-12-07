@@ -14,6 +14,8 @@ class Disk:
   free = 0
   percent = 0
 
+  add_gb = 0
+
   def __init__(self, name, index):
     self.name = name
     self.index = index
@@ -31,9 +33,8 @@ class Disk:
       return False
 
   def increase_on(self, percent):
-
     total_gb = math.ceil(to_gb(self.total))
-    add_gb = math.ceil((percent / 100) * total_gb)
-    new_size_gb = total_gb + add_gb
+    self.add_gb = math.ceil((percent / 100) * total_gb)
+    new_size_gb = total_gb + self.add_gb
 
     return new_size_gb

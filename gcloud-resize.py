@@ -3,6 +3,7 @@ import math
 
 from settings import RESIZE_PERCENT
 from src import api, parser, shell, utils
+from src.utils import show
 
 
 def main():
@@ -32,14 +33,7 @@ def check_disks(ZONE, disks):
     if label != BOOT_DISK:
       if disk.is_low():
 
-        total_gb = math.ceil(utils.to_gb(disk.total))
-        used_gb = math.ceil(utils.to_gb(disk.used))
-        free_gb = math.ceil(utils.to_gb(disk.free))
-        free_percent = 100 - disk.percent
-
-        msg = 'DEBUG: ACTION="Low disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" TOTAL_GB={3} USED_GB={4} FREE_GB={5} FREE_%={6}' \
-          .format(disk.get_label(), disk.name, disk.mount_point, total_gb, used_gb, free_gb, free_percent)
-        utils.log(msg)
+        show(action="Disk Low", disk=disk)
 
         resize_disk(ZONE, disk)
 
@@ -61,7 +55,7 @@ def analyze(disks):
     disk = disks.get(label)
 
     if disk is not None:
-      if (mount_point != EMPTY):
+      if mount_point != EMPTY:
         usage = utils.disk_usage(mount_point)
 
         disk.mount_point = mount_point
@@ -70,9 +64,7 @@ def analyze(disks):
         disk.free = usage.free
         disk.percent = usage.percent
 
-        msg = 'DEBUG ACTION="Analyze disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" TOTAL={3} USED={4} USED_%={5} FREE={6}' \
-          .format(disk.get_label(), disk.name, disk.mount_point, disk.total, disk.used, disk.percent, disk.free)
-        utils.log(msg)
+        show(action="Analyze disk", disk=disk)
 
 
 if __name__ == '__main__':
