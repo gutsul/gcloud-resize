@@ -15,14 +15,17 @@ sudo pip3 install -r requirements.txt
 ## Debug logs
 See `/var/log/syslog`
 ```bash
-Dec  6 12:28:58 test-resize /gcloud-resize.py: DEBUG: ACTION="Get instance name" INSTANCE="test-resize"
-Dec  6 12:28:58 test-resize /gcloud-resize.py: DEBUG: ACTION="Get geo zone" ZONE="us-east1-c"
-Dec  6 12:28:58 test-resize /gcloud-resize.py: DEBUG: ACTION="Run shell" COMMAND="lsblk --output name,mountpoint --pairs --bytes" OUT="NAME="sda" MOUNTPOINT=""#012NAME="sda1" MOUNTPOINT="/"#012NAME="sdb" MOUNTPOINT="/mnt/disks/disk1"#012" ERR=""
-Dec  6 12:28:58 test-resize /gcloud-resize.py: DEBUG: ACTION="Checking disk" LABEL="sdb" NAME="disk-1" MOUNTPOINT="/mnt/disks/disk1" TOTAL_GB=12 USED_GB=12 FREE_GB=0.9251796875 FREE_%=7.900000000000006
-Dec  6 12:28:58 test-resize /gcloud-resize.py: DEBUG: ACTION="Low disk" LABEL="sdb" NAME="disk-1" MOUNTPOINT="/mnt/disks/disk1"
-Dec  6 12:28:58 test-resize /gcloud-resize.py: DEBUG: ACTION="New disk size" LABEL="sdb" NAME="disk-1" MOUNTPOINT="/mnt/disks/disk1" ADD_GB=3 NEW_SIZE_GB=15
-Dec  6 12:28:59 test-resize /gcloud-resize.py: DEBUG: ACTION="wait resize" STATUS="PENDING"
-Dec  6 12:29:05 test-resize /gcloud-resize.py: DEBUG: ACTION="wait resize" STATUS="DONE"
-Dec  6 12:29:05 test-resize /gcloud-resize.py: DEBUG: ACTION="Run shell" COMMAND="sudo resize2fs /dev/sdb" OUT="Filesystem at /dev/sdb is mounted on /mnt/disks/disk1; on-line resizing required#012old_desc_blocks = 1, new_desc_blocks = 1#012The filesystem on /dev/sdb is now 3932160 blocks long.#012#012" ERR="resize2fs 1.42.9 (4-Feb-2014)#012"
-
+Dec  7 10:57:51 test-resize /gcloud-resize.py: DEBUG ACTION="Analyze disk" LABEL="sdb" NAME="disk-1" MOUNTPOINT="/mnt/disks/disk1" TOTAL_GB=29 USED_GB=12 FREE_GB=18 FREE_%=60.7
+Dec  7 10:57:51 test-resize /gcloud-resize.py: DEBUG ACTION="Disk Low" LABEL="sdb" NAME="disk-1" MOUNTPOINT="/mnt/disks/disk1" TOTAL_GB=29 USED_GB=12 FREE_GB=18 FREE_%=60.7
+Dec  7 10:57:52 test-resize /gcloud-resize.py: DEBUG: ACTION="wait resize" STATUS="PENDING"
+Dec  7 10:57:53 test-resize /gcloud-resize.py: DEBUG: ACTION="wait resize" STATUS="RUNNING"
+Dec  7 10:57:54 test-resize kernel: [163906.538219] sd 0:0:2:0: [sdb] 65011712 512-byte logical blocks: (33.3 GB/31.0 GiB)
+Dec  7 10:57:54 test-resize kernel: [163906.538223] sd 0:0:2:0: [sdb] 4096-byte physical blocks
+Dec  7 10:57:54 test-resize kernel: [163906.538765] sdb: detected capacity change from 30064771072 to 33285996544
+Dec  7 10:57:54 test-resize kernel: [163906.539890] VFS: busy inodes on changed media or resized disk sdb
+Dec  7 10:57:56 test-resize /gcloud-resize.py: message repeated 3 times: [ DEBUG: ACTION="wait resize" STATUS="RUNNING"]
+Dec  7 10:57:58 test-resize /gcloud-resize.py: DEBUG: ACTION="wait resize" STATUS="DONE"
+Dec  7 10:57:58 test-resize kernel: [163910.236359] EXT4-fs (sdb): resizing filesystem from 7340032 to 8126464 blocks
+Dec  7 10:57:58 test-resize kernel: [163910.568027] EXT4-fs (sdb): resized filesystem to 8126464
+Dec  7 10:57:59 test-resize /gcloud-resize.py: DEBUG ACTION="J.A.R.V.I.S Say" CODE=200 STATUS="ok"
 ```
