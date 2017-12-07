@@ -2,7 +2,7 @@
 
 from settings import RESIZE_PERCENT
 from src import api, parser, shell, utils, jarvis
-from src.utils import show, log
+from src.utils import show
 
 INSTANCE = api.get_instance_name()
 ZONE = api.get_geo_zone()
@@ -11,7 +11,6 @@ ZONE = api.get_geo_zone()
 def main():
   disks = api.get_attached_disks()
   analyze(disks)
-
   check_disks(disks)
 
 
