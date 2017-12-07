@@ -46,6 +46,18 @@ cd /usr/src/gcloud-resize
 sudo pip3 install -r requirements.txt
 ```
 
+### Crontab
+Configure how often need to check disks.
+```bash
+# Edit root crontab:
+sudo crontab -e
+
+# Add lines below to end of file:
+
+# GCloud resize 
+*/5 * * * * /usr/src/gcloud-resize/gcloud-resize.py # Check every 5 minutes
+```
+
 ## Settings
 Location `/usr/src/gcloud-resize/settings.py`
 
