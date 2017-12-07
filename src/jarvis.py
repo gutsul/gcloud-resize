@@ -44,5 +44,5 @@ def say(instance, disk):
 
   r = requests.post(SLACK_URL, data=json.dumps(payload))
 
-  msg = 'DEBUG ACTION="JARVIS Say" CODE={0} STATUS="{1}"'.format(r.status_code, r.text)
+  msg = 'DEBUG ACTION="J.A.R.V.I.S Say" CODE={0} STATUS="{1}"'.format(r.status_code, r.text)
   log(message=msg)
