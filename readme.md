@@ -1,15 +1,60 @@
+# GCloud resize tool v1.0
 
-## Install dependencies
+`gcloud-resize` is tool that can automatically resize persistent disks on **Google Cloud Platform**.
 
-### Python 3
+## Requirements
+
+### Compute Engine
+
+#### Labels
+Set next *labels* for VM instance.
+ 
+| Label           | Description |
+| :-------------: | --------- |
+| `environment`   | Environment definition. <br> For example value can be **development**, **production**, **stage**. |
+
+
+#### Cloud API access scopes
+Add next permissions to **Cloud API access scopes** for VM instance. 
+
+| Cloud API       | Permissions |
+| :-------------: | :---------: |
+| Compute Engine  | Read Write  |
+
+
+## Installation  
+
+`gcloud-resize` tool need installed **python 3** and run with **root** permissions.
+
+### Install Python 3
 ```bash
 sudo apt-get install python3-pip
 ```
 
-### Packages
+###  Gcloud-resize tool
+
+* Make sure you use `arbigo-prod` or `arbigo-dev` private ssh keys for **root** user.
+
 ```bash
+# Clone tool to `/usr/src/gcloud-resize` folder
+sudo git clone git@git.adlithium.com:arbigo/gcloud-resize.git /usr/src/gcloud-resize
+
+# Go to gcloud-resize folder 
+cd /usr/src/gcloud-resize
+
+# Install dependencies
 sudo pip3 install -r requirements.txt
 ```
+
+## Settings
+
+| Key                  | Type    | Value Example                          | Description |
+| :------------------- | :-----: | -------------------------------------- | ----------- |
+| `PROJECT_ID`         | String  | 'MyProject27'                          | Required.   |
+| `FREE_LIMIT_PERCENT` | Integer | 1 ... 99                               | Required.   |
+| `RESIZE_PERCENT`     | Integer | 1 ... 100                              | Required.   |
+| `SLACK_URL`          | String  | 'https://hooks.slack.com/'             | Required.   |
+| `SLACK_USERS`        | String  | '<@ygrigortsevich> <@victordementiev>' | Required.   |
 
 
 ## Debug logs

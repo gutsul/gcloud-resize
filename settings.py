@@ -14,4 +14,4 @@ RESIZE_PERCENT = 20
 SLACK_URL = 'https://hooks.slack.com/services/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'
 
 ## Send message to @nickname
-SLACK_USERS = "<@ygrigortsevich> <@victordementiev> <@alexander>"
+SLACK_USERS = '<@ygrigortsevich> <@victordementiev> <@alexander>'
