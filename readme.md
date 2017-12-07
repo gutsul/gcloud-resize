@@ -52,8 +52,8 @@ Location `/usr/src/gcloud-resize/settings.py`
 | Key                  | Type    | Value Example                          | Description |
 | :------------------- | :-----: | -------------------------------------- | ----------- |
 | `PROJECT_ID`         | String  | 'MyProject27'                          | **Required**.   |
-| `FREE_LIMIT_PERCENT` | Integer | 1 ... 99                               | **Required**.   |
-| `RESIZE_PERCENT`     | Integer | 1 ... 100                              | **Required**. Determines how much in percentage you should increase the disk when low disk space amount is detected. <br> The value should be greater than `FREE_LINIT_PERCENT`.<br>The minimum disk space you can add is **1 GB**.|
+| `FREE_LIMIT_PERCENT` | Integer | 1 ... 99                               | **Required**. Indicates available disc space threshold at which disc space will be automatically increased.<br>The value should be greater than zero. |
+| `RESIZE_PERCENT`     | Integer | 2 ... 100                              | **Required**. Determines how much in percentage you should increase the disk when low disk space amount is detected. <br> The value should be greater than `FREE_LINIT_PERCENT`.<br>The minimum disk space you can add is **1 GB**.|
 | `SLACK_URL`          | String  | 'https://hooks.slack.com/'             | **Required**. Slack incoming webhook url.  |
 | `SLACK_USERS`        | String  | '<@ygrigortsevich> <@victordementiev>' | **Required**. Users who will be notified about the resize message.   |
 
