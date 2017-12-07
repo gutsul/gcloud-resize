@@ -26,6 +26,8 @@ def check_disks(disks):
         show(action="Disk Low", disk=disk)
 
         resize_disk(disk)
+
+        analyze_usage(disk)
         jarvis.say(instance=INSTANCE, disk=disk)
 
 
@@ -47,15 +49,17 @@ def analyze(disks):
 
     if disk is not None:
       if mount_point != EMPTY:
-        usage = utils.disk_usage(mount_point)
-
         disk.mount_point = mount_point
-        disk.total = usage.total
-        disk.used = usage.used
-        disk.free = usage.free
-        disk.percent = usage.percent
-
+        analyze_usage(disk)
         show(action="Analyze disk", disk=disk)
+
+
+def analyze_usage(disk):
+  usage = utils.disk_usage(disk.mount_point)
+  disk.total = usage.total
+  disk.used = usage.used
+  disk.free = usage.free
+  disk.percent = usage.percent
 
 
 if __name__ == '__main__':

@@ -7,11 +7,12 @@ from src.utils import log
 
 
 def say(instance, disk):
-  title = "Test message"
-  recepients = "<@ygrigortsevich> <@victordementiev> <@alexander>"
-  message = "Added *10 GB* to disk *postgres-data-3* (_now used: 68.5 %_)"
+  title = "Disk resize"
 
-  instance = "test-us-east"
+  recepients = "<@ygrigortsevich> <@victordementiev> <@alexander>"
+
+  message = "Added *{0} GB* to disk *{1}* (_now used: {2} %_)".format(disk.add_gb, disk.name, disk.percent)
+
   environment = "Test"
 
   payload = {
