@@ -14,11 +14,8 @@ def run(cmd):
     output = output.decode("utf-8")
     error = error.decode("utf-8")
 
-    msg = 'DEBUG: ACTION="Run shell" COMMAND="{0}" OUT="{1}" ERR="{2}"'\
-          .format(cmd, output, error)
-    log(msg)
   except:
-    msg = "Cannot run command: {0}".format(cmd)
+    msg = 'ERROR  CMD="{0}"'.format(cmd)
     log(msg)
 
   return output
