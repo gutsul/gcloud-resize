@@ -4,7 +4,7 @@ from settings import RESIZE_PERCENT
 from src import api, parser, shell, utils, jarvis
 from src.utils import show, log
 
-INSTANCE_NAME = api.get_instance_name()
+INSTANCE = api.get_instance_name()
 ZONE = api.get_geo_zone()
 
 
@@ -27,7 +27,7 @@ def check_disks(disks):
         show(action="Disk Low", disk=disk)
 
         resize_disk(disk)
-        jarvis.say(instance=INSTANCE_NAME, disk=disk)
+        jarvis.say(instance=INSTANCE, disk=disk)
 
 
 def resize_disk(disk):
