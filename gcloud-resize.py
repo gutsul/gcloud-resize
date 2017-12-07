@@ -9,12 +9,12 @@ from src.utils import show
 def main():
 
   INSTANCE_NAME = api.get_instance_name()
-  msg = 'DEBUG: ACTION="Get instance name" INSTANCE="{0}"'.format(INSTANCE_NAME)
+  msg = 'DEBUG ACTION="Get instance name" INSTANCE="{0}"'.format(INSTANCE_NAME)
   utils.log(msg)
 
 
   ZONE = api.get_geo_zone()
-  msg = 'DEBUG: ACTION="Get geo zone" ZONE="{0}"'.format(ZONE)
+  msg = 'DEBUG ACTION="Get geo zone" ZONE="{0}"'.format(ZONE)
   utils.log(msg)
 
 

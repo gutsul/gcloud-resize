@@ -51,6 +51,6 @@ def show(action, disk):
   free_gb = math.ceil(to_gb(disk.free))
   free_percent = 100 - disk.percent
 
-  msg = 'DEBUG: ACTION="{7}" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" TOTAL_GB={3} USED_GB={4} FREE_GB={5} FREE_%={6}' \
+  msg = 'DEBUG ACTION="{7}" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" TOTAL_GB={3} USED_GB={4} FREE_GB={5} FREE_%={6}' \
     .format(disk.get_label(), disk.name, disk.mount_point, total_gb, used_gb, free_gb, free_percent, action)
   log(msg)
