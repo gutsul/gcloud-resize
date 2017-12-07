@@ -6,7 +6,7 @@ from settings import SLACK_URL
 from src.utils import log
 
 
-def say():
+def say(instance, disk):
   title = "Test message"
   recepients = "<@ygrigortsevich> <@victordementiev> <@alexander>"
   message = "Added *10 GB* to disk *postgres-data-3* (_now used: 68.5 %_)"

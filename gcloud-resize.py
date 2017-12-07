@@ -2,28 +2,20 @@
 
 from settings import RESIZE_PERCENT
 from src import api, parser, shell, utils, jarvis
-from src.utils import show
+from src.utils import show, log
+
+INSTANCE_NAME = api.get_instance_name()
+ZONE = api.get_geo_zone()
 
 
 def main():
-
-  INSTANCE_NAME = api.get_instance_name()
-  msg = 'DEBUG ACTION="Get instance name" INSTANCE="{0}"'.format(INSTANCE_NAME)
-  utils.log(msg)
-
-
-  ZONE = api.get_geo_zone()
-  msg = 'DEBUG ACTION="Get geo zone" ZONE="{0}"'.format(ZONE)
-  utils.log(msg)
-
-
   disks = api.get_attached_disks()
   analyze(disks)
 
-  check_disks(ZONE, disks)
+  check_disks(disks)
 
 
-def check_disks(ZONE, disks):
+def check_disks(disks):
   BOOT_DISK = "sda"
 
   for label in disks.keys():
@@ -34,10 +26,11 @@ def check_disks(ZONE, disks):
 
         show(action="Disk Low", disk=disk)
 
-        resize_disk(ZONE, disk)
+        resize_disk(disk)
+        jarvis.say(instance=INSTANCE_NAME, disk=disk)
 
 
-def resize_disk(ZONE, disk):
+def resize_disk(disk):
   size_gb = disk.increase_on(RESIZE_PERCENT)
   api.resize_disk(name=disk.name, size_gb=size_gb, zone=ZONE)
   shell.resize_disk(label=disk.get_label())
@@ -67,6 +60,4 @@ def analyze(disks):
 
 
 if __name__ == '__main__':
-  # main()
-
-  jarvis.say()
+  main()
