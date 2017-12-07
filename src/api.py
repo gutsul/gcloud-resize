@@ -4,13 +4,15 @@ import requests
 from googleapiclient import discovery
 
 from settings import PROJECT_ID
-from src import utils
+from src import utils, parser
 
 service = discovery.build('compute', 'v1')
 
 root_url = 'http://metadata.google.internal/computeMetadata/v1/instance/'
 METADATA_HEADERS = {'Metadata-Flavor': 'Google'}
 
+
+# TODO: All methods must return json. Remove parse methods.
 
 def get_instance_name():
   url = root_url + "name"
@@ -22,9 +24,6 @@ def get_instance_name():
     get_instance_name()
 
   name = resp.text
-
-  print('DEBUG: ACTION="Get instance name" INSTANCE="{0}"'.format(name))
-
   return name
 
 
@@ -37,11 +36,9 @@ def get_geo_zone():
     time.sleep(1)
     get_geo_zone()
 
-  result = utils.parse_geo_zone(resp.text)
+  geo_zone = parser.parse_geo_zone(resp.text)
 
-  print('DEBUG: ACTION="Get geo zone" ZONE="{0}"'.format(result))
-
-  return result
+  return geo_zone
 
 
 def get_attached_disks():
@@ -53,16 +50,21 @@ def get_attached_disks():
     time.sleep(1)
     get_attached_disks()
 
-  disks = utils.parse_disks(json=resp.json())
+  disks = parser.parse_disks(json=resp.json())
+
   return disks
 
 
-def resize_disk(disk, zone):
-  new_size = disk.cal_new_size_gb()
-  name = disk.name
+def get_instance(instance, zone):
+  request = service.instances().get(project=PROJECT_ID, zone=zone, instance=instance)
+  response = request.execute()
+  return response
+
+
+def resize_disk(name, size_gb, zone):
 
   disks_resize_request_body = {
-    "sizeGb": new_size
+    "sizeGb": size_gb
   }
 
   request = service.disks().resize(project=PROJECT_ID, zone=zone, disk=name, body=disks_resize_request_body)
@@ -71,11 +73,10 @@ def resize_disk(disk, zone):
   result = wait_for_operation(service, project=PROJECT_ID, zone=zone, operation=response['name'])
 
   print('DEBUG: ACTION="GCloud resize" NAME="{0}" NEW_SIZE={1} RESPONSE="{2}"'
-        .format(name, new_size, result))
+        .format(name, size_gb, result))
 
 
 def wait_for_operation(compute, project, zone, operation):
-    print('Waiting for operation to finish...')
     while True:
       result = compute.zoneOperations().get(
         project=project,
@@ -84,7 +85,8 @@ def wait_for_operation(compute, project, zone, operation):
 
       status = result['status']
 
-      print('DEBUG: OPERATION="wait resize" STATUS="{0}"'.format(status))
+      msg = 'DEBUG ACTION="wait resize" STATUS="{0}"'.format(status)
+      utils.log(msg)
 
       if status == 'DONE':
         if 'error' in result:

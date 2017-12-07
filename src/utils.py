@@ -1,77 +1,56 @@
-import re
-import subprocess
+import os
+import syslog
 
-from src.models import Disk
+import sys
 
-
-def parse_geo_zone(line):
-  regex = re.compile("\/zones\/([a-z|\D|\d]+)")
-  search = regex.search(line)
-  result = search.group(1)
-  return result
-
-
-def parse_disks(json):
-  disks = {}
-
-  for item in json:
-    name = item["deviceName"]
-    index = item["index"]
-
-    disk = Disk(name=name, index=index)
-
-    disks[disk.get_label()] = disk
-
-  return disks
-
-
-# TODO: Show error
-def shell(cmd):
-  output = None
-
-  try:
-    proc = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    output, error = proc.communicate()
-
-    output = output.decode("utf-8")
-    error = error.decode("utf-8")
-
-    print('DEBUG: ACTION="Run shell" COMMAND="{0}" OUT="{1}" ERR="{2}"'
-          .format(cmd, output, error))
-
-  except:
-    print("Cannot run command: {0}".format(cmd))
-
-  return output
-
-
-def apply_disk_changes(disk):
-  label = disk.get_label()
-  cmd = "sudo resize2fs /dev/{0}".format(label)
-  shell(cmd)
-
-
-def get_blocked_device():
-  cmd = "lsblk --output name,mountpoint --pairs --bytes"
-  result = shell(cmd)
-
-  return result
-
-
-def parse_device_info(line):
-  regex = re.compile('NAME="([a-z\d]*)" MOUNTPOINT="([\w\/]*)"')
-  search = regex.search(line)
-
-  label = search.group(1)
-  mountpoint = search.group(2)
-
-  return label, mountpoint
+import math
+from psutil._common import usage_percent, sdiskusage
+from psutil._compat import PY3, unicode
 
 
 def to_gb(bytes):
   BYTES_IN_MEGABYTE = 1048576
   BYTES_IN_GIGABYTE = BYTES_IN_MEGABYTE * 1000
-  # BYTES_IN_GIGABYTE = 1073741824
 
   return int(bytes) / BYTES_IN_GIGABYTE
 
+
+def disk_usage(path):
+  try:
+    st = os.statvfs(path)
+  except UnicodeEncodeError:
+    if not PY3 and isinstance(path, unicode):
+      # this is a bug with os.statvfs() and unicode on
+      # Python 2, see:
+      # - https://github.com/giampaolo/psutil/issues/416
+      # - http://bugs.python.org/issue18695
+      try:
+        path = path.encode(sys.getfilesystemencoding())
+      except UnicodeEncodeError:
+        pass
+      st = os.statvfs(path)
+    else:
+      raise
+  free = (st.f_bavail * st.f_frsize)
+  total = (st.f_blocks * st.f_frsize)
+  used = (st.f_blocks - st.f_bfree) * st.f_frsize
+  percent = usage_percent(used, total, _round=1)
+  # NB: the percentage is -5% than what shown by df due to
+  # reserved blocks that we are currently not considering:
+  # http://goo.gl/sWGbH
+  return sdiskusage(total, used, free, percent)
+
+
+def log(message):
+  syslog.syslog(syslog.LOG_DEBUG, message)
+
+
+def show(action, disk):
+  total_gb = math.ceil(to_gb(disk.total))
+  used_gb = math.ceil(to_gb(disk.used))
+  free_gb = math.ceil(to_gb(disk.free))
+  free_percent = 100 - disk.percent
+
+  msg = 'DEBUG ACTION="{7}" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" TOTAL_GB={3} USED_GB={4} FREE_GB={5} FREE_%={6}' \
+    .format(disk.get_label(), disk.name, disk.mount_point, total_gb, used_gb, free_gb, free_percent, action)
+  log(msg)

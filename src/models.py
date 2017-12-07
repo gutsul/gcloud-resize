@@ -1,18 +1,20 @@
 import math
-import os
-import sys
 
-from psutil._common import usage_percent, sdiskusage
-from psutil._compat import PY3, unicode
-
-from settings import FREE_LIMIT_PERCENT, RESIZE_PERCENT
-from src import utils
+from settings import FREE_LIMIT_PERCENT
+from src.utils import to_gb, log
 
 
 class Disk:
   name = None
   index = 0
   mount_point = None
+
+  total = 0
+  used = 0
+  free = 0
+  percent = 0
+
+  add_gb = 0
 
   def __init__(self, name, index):
     self.name = name
@@ -22,58 +24,17 @@ class Disk:
     result = "sd" + chr(97 + self.index)
     return result
 
-  def usage(self):
-    """Return disk usage associated with path."""
-
-    path = self.mount_point
-
-    try:
-      st = os.statvfs(path)
-    except UnicodeEncodeError:
-      if not PY3 and isinstance(path, unicode):
-        # this is a bug with os.statvfs() and unicode on
-        # Python 2, see:
-        # - https://github.com/giampaolo/psutil/issues/416
-        # - http://bugs.python.org/issue18695
-        try:
-          path = path.encode(sys.getfilesystemencoding())
-        except UnicodeEncodeError:
-          pass
-        st = os.statvfs(path)
-      else:
-        raise
-    free = (st.f_bavail * st.f_frsize)
-    total = (st.f_blocks * st.f_frsize)
-    used = (st.f_blocks - st.f_bfree) * st.f_frsize
-    percent = usage_percent(used, total, _round=1)
-    # NB: the percentage is -5% than what shown by df due to
-    # reserved blocks that we are currently not considering:
-    # http://goo.gl/sWGbH
-    return sdiskusage(total, used, free, percent)
-
   def is_low(self):
-    usage = self.usage()
-
-    total_gb = math.ceil(utils.to_gb(usage.total))
-    free_gb = utils.to_gb(usage.free)
-    free_percent = 100 - usage.percent
-
-    print('DEBUG: ACTION="Checking disk" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" TOTAL_GB={3} USED_GB={4} FREE_GB={5} FREE_%={6}'
-          .format(self.get_label(), self.name, self.mount_point, total_gb, free_gb, free_percent))
+    free_percent = 100 - self.percent
 
     if free_percent < FREE_LIMIT_PERCENT:
       return True
     else:
       return False
 
-  def cal_new_size_gb(self):
-    usage = self.usage()
-
-    total_gb = math.ceil(utils.to_gb(usage.total))
-    add_size_gb = math.ceil((RESIZE_PERCENT / 100) * total_gb)
-    new_size_gb = total_gb + add_size_gb
-
-    print('DEBUG: ACTION="New disk size" LABEL="{0}" NAME="{1}" MOUNTPOINT="{2}" ADD_GB={3} NEW_SIZE_GB={4}'
-          .format(self.get_label(), self.name, self.mount_point, add_size_gb, new_size_gb))
+  def increase_on(self, percent):
+    total_gb = math.ceil(to_gb(self.total))
+    self.add_gb = math.ceil((percent / 100) * total_gb)
+    new_size_gb = total_gb + self.add_gb
 
     return new_size_gb
