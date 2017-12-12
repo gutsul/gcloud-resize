@@ -20,7 +20,7 @@ def run(cmd):
   return output
 
 
-def resize_disk(label):
+def resize_ext4_disk(label):
   cmd = "sudo resize2fs /dev/{0}".format(label)
   run(cmd)
 

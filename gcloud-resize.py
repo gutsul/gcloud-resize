@@ -40,7 +40,7 @@ def check_disks(disks):
 def resize_disk(disk):
   size_gb = disk.increase_on(RESIZE_PERCENT)
   api.resize_disk(name=disk.name, size_gb=size_gb, zone=ZONE)
-  shell.resize_disk(label=disk.get_label())
+  shell.resize_ext4_disk(label=disk.get_label())
 
 
 def analyze(disks):
