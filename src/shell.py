@@ -25,6 +25,11 @@ def resize_ext4_disk(label):
   run(cmd)
 
 
+def resize_xfs_disk(label):
+  cmd = "sudo xfs_growfs /dev/{0}".format(label)
+  run(cmd)
+
+
 def get_block_devices():
   cmd = "lsblk --output name,mountpoint --pairs --bytes"
   result = run(cmd)
