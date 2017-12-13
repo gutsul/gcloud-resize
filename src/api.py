@@ -12,8 +12,6 @@ root_url = 'http://metadata.google.internal/computeMetadata/v1/instance/'
 METADATA_HEADERS = {'Metadata-Flavor': 'Google'}
 
 
-# TODO: All methods must return json. Remove parse methods.
-
 def get_instance_name():
   url = root_url + "name"
 
@@ -39,20 +37,6 @@ def get_geo_zone():
   geo_zone = parser.parse_geo_zone(resp.text)
 
   return geo_zone
-
-
-def get_attached_disks():
-  url = root_url + "disks/?recursive=true"
-
-  resp = requests.get(url, headers=METADATA_HEADERS)
-
-  if resp.status_code == 503:
-    time.sleep(1)
-    get_attached_disks()
-
-  disks = parser.parse_disks(json=resp.json())
-
-  return disks
 
 
 def get_instance(instance, zone):
