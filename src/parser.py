@@ -22,15 +22,40 @@ def parse_geo_zone(line):
   return geo_zone
 
 
-def parse_disks(json):
-  disks = {}
+def disk_info(line):
+  regex = re.compile("[\w\/%]+")
+  list = regex.findall(line)
 
-  for item in json:
+  info = {
+    "source": list[0],
+    "fstype": list[1],
+    "size_gb": list[2],
+    "used_gb": list[3],
+    "avail_gb": list[4],
+    "pcent": list[5],
+    "target": list[6]
+  }
+
+  return info
+
+
+def environment(json):
+  try:
+    environment = json["labels"]["environment"]
+  except:
+    environment = "Unknown"
+  return environment
+
+
+def attached_disks(json):
+  disks = []
+
+  for item in json["disks"]:
     name = item["deviceName"]
     index = item["index"]
+    boot = item["boot"]
 
-    disk = Disk(name=name, index=index)
-
-    disks[disk.get_label()] = disk
+    disk = Disk(name=name, index=index, boot=boot)
+    disks.append(disk)
 
   return disks
