@@ -30,13 +30,6 @@ def resize_xfs_disk(label):
   run(cmd)
 
 
-def get_block_devices():
-  cmd = "lsblk --output name,mountpoint --pairs --bytes"
-  result = run(cmd)
-
-  return result
-
-
 def get_disk_info(label):
   cmd = "df -BG --output=source,fstype,size,used,avail,pcent,target /dev/{0} | sed -e /Filesystem/d".format(label)
   result = run(cmd)
