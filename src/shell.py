@@ -35,3 +35,10 @@ def get_block_devices():
   result = run(cmd)
 
   return result
+
+
+def get_disk_info():
+  cmd = "df -BG --output=source,fstype,size,used,avail,pcent,target /dev/sdb"
+  result = run(cmd)
+
+  return result
