@@ -30,7 +30,7 @@ def init(disk):
   disk.pcent = int(no_dimen(pcent))
 
   target = info.get("target")
-  disk.target = int(no_dimen(target))
+  disk.target = target
 
   msg = 'DEBUG ACTION="Init disk." NAME="{}" SOURCE="{}" FSTYPE="{}" SIZE_GB={} USED_GB={} USED_%={} AVAIL_GB={} TARGET={}' \
     .format(disk.name, source, disk.fstype, disk.size, disk.used, disk.pcent, disk.avail, disk.target)
