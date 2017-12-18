@@ -73,8 +73,8 @@ Location `/usr/src/gcloud-resize/settings.py`
 ## Debug logs
 See `/var/log/syslog`
 ```bash
-Dec  7 10:57:51 test-resize /gcloud-resize.py: DEBUG ACTION="Analyze disk" LABEL="sdb" NAME="disk-1" MOUNTPOINT="/mnt/disks/disk1" TOTAL_GB=29 USED_GB=12 FREE_GB=18 FREE_%=60.7
-Dec  7 10:57:51 test-resize /gcloud-resize.py: DEBUG ACTION="Disk Low" LABEL="sdb" NAME="disk-1" MOUNTPOINT="/mnt/disks/disk1" TOTAL_GB=29 USED_GB=12 FREE_GB=18 FREE_%=60.7
+Dec 18 16:24:53 localhost /gcloud-resize.py: DEBUG ACTION="Init disk." NAME="disk-1" SOURCE="/dev/sdb" FSTYPE="ext4" SIZE_GB=10 USED_GB=1 USED_%=1 AVAIL_GB=10 TARGET=/mnt/disk/disk1
+Dec 18 16:24:53 localhost /gcloud-resize.py: DEBUG ACTION="Init disk." NAME="disk-2" SOURCE="/dev/sdc" FSTYPE="xfs" SIZE_GB=10 USED_GB=1 USED_%=1 AVAIL_GB=10 TARGET=/mnt/disk/disk2
 Dec  7 10:57:52 test-resize /gcloud-resize.py: DEBUG ACTION="wait resize" STATUS="PENDING"
 Dec  7 10:57:53 test-resize /gcloud-resize.py: DEBUG ACTION="wait resize" STATUS="RUNNING"
 Dec  7 10:57:58 test-resize /gcloud-resize.py: DEBUG ACTION="wait resize" STATUS="DONE"
