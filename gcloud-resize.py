@@ -7,7 +7,7 @@ from src.utils import no_dimen, log
 
 
 def init(disk):
-  label = disk.get_label
+  label = disk.get_label()
   line = shell.get_disk_info(label=label)
 
   info = parser.disk_info(line)
