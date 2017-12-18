@@ -1,7 +1,6 @@
 import math
 
 from settings import FREE_LIMIT_PERCENT
-from src.utils import to_gb, log
 
 
 class Disk:
@@ -15,8 +14,6 @@ class Disk:
   used = 0
   avail = 0
   pcent = 0
-
-  add_gb = 0
 
   def __init__(self, name, index, boot):
     self.name = name
@@ -37,7 +34,6 @@ class Disk:
 
   def increase_on(self, percent):
     total_gb = self.size
-    self.add_gb = math.ceil((percent / 100) * total_gb)
-    new_size_gb = total_gb + self.add_gb
+    add_gb = math.ceil((percent / 100) * total_gb)
 
-    return new_size_gb
+    return add_gb
