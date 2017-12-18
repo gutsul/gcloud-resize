@@ -2,7 +2,7 @@ import syslog
 
 
 def no_dimen(line):
-  line = line[:-1]
+  return line[:-1]
 
 
 def log(message):
