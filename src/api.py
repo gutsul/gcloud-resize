@@ -4,7 +4,8 @@ import requests
 from googleapiclient import discovery
 
 from settings import PROJECT_ID
-from src import utils, parser
+from src import parser
+from src.utils import log
 
 service = discovery.build('compute', 'v1')
 
@@ -56,8 +57,9 @@ def resize_disk(name, size_gb, zone):
 
   result = wait_for_operation(service, project=PROJECT_ID, zone=zone, operation=response['name'])
 
-  print('DEBUG: ACTION="GCloud resize" NAME="{0}" NEW_SIZE={1} RESPONSE="{2}"'
-        .format(name, size_gb, result))
+  msg = 'DEBUG: ACTION="GCloud resize" NAME="{0}" NEW_SIZE={1} RESPONSE="{2}"'\
+        .format(name, size_gb, result)
+  log(msg)
 
 
 def wait_for_operation(compute, project, zone, operation):
@@ -70,7 +72,7 @@ def wait_for_operation(compute, project, zone, operation):
       status = result['status']
 
       msg = 'DEBUG ACTION="wait resize" STATUS="{0}"'.format(status)
-      utils.log(msg)
+      log(msg)
 
       if status == 'DONE':
         if 'error' in result:
