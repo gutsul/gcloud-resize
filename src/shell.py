@@ -31,7 +31,7 @@ def resize_xfs_disk(label):
 
 
 def get_disk_info(label):
-  cmd = "df -BG --output=source,fstype,size,used,avail,pcent,target /dev/{0}".format(label)
+  cmd = "sudo df -BG --output=source,fstype,size,used,avail,pcent,target /dev/{0}".format(label)
 
   output = run(cmd)
   result = output.split("\n")[1]
