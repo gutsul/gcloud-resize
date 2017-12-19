@@ -8,7 +8,7 @@ from src.utils import log
 
 def say(instance, environment, disk):
   title = "Disk resize"
-  message = "Added *{0} GB* to disk *{1}* (_now used: {2} %_)".format(disk.add_gb, disk.name, disk.percent)
+  message = "Added *{0} GB* to disk *{1}* (_now used: {2} %_)".format(disk.add_gb, disk.name, disk.pcent)
 
   payload = {
   "attachments": [

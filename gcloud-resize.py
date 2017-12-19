@@ -79,6 +79,7 @@ def main():
       if disk.is_low():
         resize(ZONE, disk)
         apply(disk)
+        init(disk)
         jarvis.say(instance=INSTANCE, environment=ENVIRONMENT, disk=disk)
 
 
