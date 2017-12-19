@@ -1,71 +1,86 @@
 #!/usr/bin/env python3
 
 from settings import RESIZE_PERCENT
-from src import api, parser, shell, utils, jarvis
-from src.utils import show
+from src import api, parser, shell, jarvis
+from src.fstypes import XFS, EXT4
+from src.utils import no_dimen, log
 
-INSTANCE = api.get_instance_name()
-ZONE = api.get_geo_zone()
 
-data = api.get_instance(instance=INSTANCE, zone=ZONE)
-try:
-  ENVIRONMENT = data["labels"]["environment"]
-except:
-  ENVIRONMENT = "Unknown"
+def init(disk):
+  label = disk.get_label()
+  line = shell.get_disk_info(label=label)
+
+  info = parser.disk_info(line)
+
+  source = info.get("source")
+
+  fstype = info.get("fstype")
+  disk.fstype = fstype
+
+  size_gb = info.get("size_gb")
+  disk.size = int(no_dimen(size_gb))
+
+  used_gb = info.get("used_gb")
+  disk.used = int(no_dimen(used_gb))
+
+  avail_gb = info.get("avail_gb")
+  disk.avail = int(no_dimen(avail_gb))
+
+  pcent = info.get("pcent")
+  disk.pcent = int(no_dimen(pcent))
+
+  target = info.get("target")
+  disk.target = target
+
+  msg = 'DEBUG ACTION="Init disk." NAME="{}" SOURCE="{}" FSTYPE="{}" SIZE_GB={} USED_GB={} USED_%={} AVAIL_GB={} TARGET={}' \
+    .format(disk.name, source, disk.fstype, disk.size, disk.used, disk.pcent, disk.avail, disk.target)
+  log(msg)
+
+
+def resize(ZONE, disk):
+  add_gb = disk.increase_on(RESIZE_PERCENT)
+  new_size_gb = disk.size + add_gb
+  api.resize_disk(name=disk.name, size_gb=new_size_gb, zone=ZONE)
+
+  msg = 'DEBUG ACTION="Resize disk." NAME="{}" ADD_GB={} NEW_SIZE_GB={}' \
+      .format(disk.name, add_gb, new_size_gb)
+  log(msg)
+
+
+def apply(disk):
+  if disk.fstype == EXT4:
+    shell.resize_ext4_disk(label=disk.get_label())
+  elif disk.fstype == XFS:
+    shell.resize_xfs_disk(label=disk.get_label())
+  else:
+    msg = 'ERROR ACTION="Apply disk." NAME="{}" SOURCE="/dev/{}" FSTYPE="{}" REASON="Not supported file system."' \
+        .format(disk.name, disk.get_label(), disk.fstype)
+    log(msg)
+
+  msg = 'DEBUG ACTION="Apply disk." NAME="{}" SOURCE="/dev/{}" FSTYPE="{}"' \
+      .format(disk.name, disk.get_label(), disk.fstype)
+  log(msg)
 
 
 def main():
-  disks = api.get_attached_disks()
-  analyze(disks)
-  check_disks(disks)
+  INSTANCE = api.get_instance_name()
+  ZONE = api.get_geo_zone()
 
+  instance_json = api.get_instance(instance=INSTANCE, zone=ZONE)
 
-def check_disks(disks):
-  BOOT_DISK = "sda"
+  ENVIRONMENT = parser.environment(json=instance_json)
 
-  for label in disks.keys():
-    disk = disks.get(label)
+  disks = parser.attached_disks(json=instance_json)
 
-    if label != BOOT_DISK:
+  for disk in disks:
+    if disk.boot is False:
+      init(disk)
+
       if disk.is_low():
-
-        show(action="Disk Low", disk=disk)
-
-        resize_disk(disk)
-
-        analyze_usage(disk)
+        resize(ZONE, disk)
+        apply(disk)
+        init(disk)
         jarvis.say(instance=INSTANCE, environment=ENVIRONMENT, disk=disk)
-
-
-def resize_disk(disk):
-  size_gb = disk.increase_on(RESIZE_PERCENT)
-  api.resize_disk(name=disk.name, size_gb=size_gb, zone=ZONE)
-  shell.resize_disk(label=disk.get_label())
-
-
-def analyze(disks):
-  EMPTY = ""
-
-  output = shell.get_block_devices()
-
-  for line in output.splitlines():
-    label, mount_point = parser.parse_device_info(line)
-
-    disk = disks.get(label)
-
-    if disk is not None:
-      if mount_point != EMPTY:
-        disk.mount_point = mount_point
-        analyze_usage(disk)
-        show(action="Analyze disk", disk=disk)
-
-
-def analyze_usage(disk):
-  usage = utils.disk_usage(disk.mount_point)
-  disk.total = usage.total
-  disk.used = usage.used
-  disk.free = usage.free
-  disk.percent = usage.percent
 
 
 if __name__ == '__main__':

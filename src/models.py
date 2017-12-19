@@ -1,40 +1,41 @@
 import math
 
 from settings import FREE_LIMIT_PERCENT
-from src.utils import to_gb, log
 
 
 class Disk:
   name = None
   index = 0
-  mount_point = None
+  boot = False
+  fstype = None
+  target = None
 
-  total = 0
+  size = 0
   used = 0
-  free = 0
-  percent = 0
+  avail = 0
+  pcent = 0
 
   add_gb = 0
 
-  def __init__(self, name, index):
+  def __init__(self, name, index, boot):
     self.name = name
     self.index = index
+    self.boot = boot
 
   def get_label(self):
     result = "sd" + chr(97 + self.index)
     return result
 
   def is_low(self):
-    free_percent = 100 - self.percent
+    free_percent = 100 - self.pcent
 
-    if free_percent < FREE_LIMIT_PERCENT:
+    if free_percent <= FREE_LIMIT_PERCENT:
       return True
     else:
       return False
 
   def increase_on(self, percent):
-    total_gb = math.ceil(to_gb(self.total))
+    total_gb = self.size
     self.add_gb = math.ceil((percent / 100) * total_gb)
-    new_size_gb = total_gb + self.add_gb
 
-    return new_size_gb
+    return self.add_gb

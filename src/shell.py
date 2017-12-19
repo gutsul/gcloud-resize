@@ -20,13 +20,20 @@ def run(cmd):
   return output
 
 
-def resize_disk(label):
+def resize_ext4_disk(label):
   cmd = "sudo resize2fs /dev/{0}".format(label)
   run(cmd)
 
 
-def get_block_devices():
-  cmd = "lsblk --output name,mountpoint --pairs --bytes"
-  result = run(cmd)
+def resize_xfs_disk(label):
+  cmd = "sudo xfs_growfs /dev/{0}".format(label)
+  run(cmd)
+
+
+def get_disk_info(label):
+  cmd = "sudo df -BG --output=source,fstype,size,used,avail,pcent,target /dev/{0}".format(label)
+
+  output = run(cmd)
+  result = output.split("\n")[1]
 
   return result

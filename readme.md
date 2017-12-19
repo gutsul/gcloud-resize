@@ -1,6 +1,7 @@
-# GCloud resize tool v0.7
+# GCloud resize tool v0.8
 
 `gcloud-resize` is tool that can automatically resize persistent disks on **Google Cloud Platform**.
+<br>This tool supports the next filesystems: **ext4**, **xfs**.
 
 ## Requirements
 
@@ -26,9 +27,15 @@ Add next permissions to **Cloud API access scopes** for VM instance.
 
 `gcloud-resize` tool need installed **python 3** and run with **root** permissions.
 
-### Install Python 3
+### Install Python
 ```bash
 sudo apt-get install python3-pip
+```
+
+### Install Dependencies
+```bash
+# For XFS support
+sudo apt-get -y install xfsprogs
 ```
 
 ###  Gcloud-resize tool
@@ -73,10 +80,20 @@ Location `/usr/src/gcloud-resize/settings.py`
 ## Debug logs
 See `/var/log/syslog`
 ```bash
-Dec  7 10:57:51 test-resize /gcloud-resize.py: DEBUG ACTION="Analyze disk" LABEL="sdb" NAME="disk-1" MOUNTPOINT="/mnt/disks/disk1" TOTAL_GB=29 USED_GB=12 FREE_GB=18 FREE_%=60.7
-Dec  7 10:57:51 test-resize /gcloud-resize.py: DEBUG ACTION="Disk Low" LABEL="sdb" NAME="disk-1" MOUNTPOINT="/mnt/disks/disk1" TOTAL_GB=29 USED_GB=12 FREE_GB=18 FREE_%=60.7
-Dec  7 10:57:52 test-resize /gcloud-resize.py: DEBUG ACTION="wait resize" STATUS="PENDING"
-Dec  7 10:57:53 test-resize /gcloud-resize.py: DEBUG ACTION="wait resize" STATUS="RUNNING"
-Dec  7 10:57:58 test-resize /gcloud-resize.py: DEBUG ACTION="wait resize" STATUS="DONE"
-Dec  7 10:57:59 test-resize /gcloud-resize.py: DEBUG ACTION="J.A.R.V.I.S Say" CODE=200 STATUS="ok"
+Dec 19 11:14:03 localhost /gcloud-resize.py: DEBUG ACTION="Init disk." NAME="disk-1" SOURCE="/dev/sdb" FSTYPE="ext4" SIZE_GB=14 USED_GB=10 USED_%=66 AVAIL_GB=5 TARGET=/mnt/disk/disk1
+Dec 19 11:14:03 localhost /gcloud-resize.py: DEBUG ACTION="Init disk." NAME="disk-2" SOURCE="/dev/sdc" FSTYPE="xfs" SIZE_GB=12 USED_GB=10 USED_%=76 AVAIL_GB=3 TARGET=/mnt/disk/disk2
+Dec 19 11:15:57 localhost /gcloud-resize.py: DEBUG ACTION="wait resize" STATUS="PENDING"
+Dec 19 11:15:59 localhost /gcloud-resize.py: DEBUG ACTION="wait resize" STATUS="RUNNING"
+Dec 19 11:16:03 localhost /gcloud-resize.py: DEBUG ACTION="wait resize" STATUS="DONE"
+Dec 19 11:16:03 localhost /gcloud-resize.py: DEBUG ACTION="GCloud resize" NAME="disk-1" NEW_SIZE=16 RESPONSE="{'user': '438031059494-compute@developer.gserviceaccount.com', 'startTime': '2017-12-19T03:15:57.980-08:00', 'id': '8572997244663712258', 'name': 'operation-1513682157531-560af974d6f79-c95f1d73-10be4206', 'status': 'DONE', 'selfLink': 'https://www.googleapis.com/compute/v1/projects/adlithium-1289/zones/us-central1-a/operations/operation-1513682157531-560af974d6f79-c95f1d73-10be4206', 'zone': 'https://www.googleapis.com/compute/v1/projects/adlithium-1289/zones/us-central1-a', 'insertTime': '2017-12-19T03:15:57.721-08:00', 'targetId': '7544387413751976286', 'progress': 100, 'endTime': '2017-12-19T03:16:02.534-08:00', 'kind': 'compute#operation', 'targetLink': 'https://www.googleapis.com/compute/v1/projects/adlithium-1289/zones/us-central1-a/disks/disk-1', 'operationType': 'resizeDisk'}"
+Dec 19 11:16:03 localhost /gcloud-resize.py: DEBUG ACTION="Resize disk." NAME="disk-1" ADD_GB=2 NEW_SIZE_GB=16
+Dec 19 11:16:04 localhost /gcloud-resize.py: DEBUG ACTION="Apply disk." NAME="disk-1" SOURCE="/dev/sdb" FSTYPE="ext4"
+Dec 19 11:16:04 localhost /gcloud-resize.py: DEBUG ACTION="Init disk." NAME="disk-1" SOURCE="/dev/sdb" FSTYPE="ext4" SIZE_GB=16 USED_GB=10 USED_%=58 AVAIL_GB=7 TARGET=/mnt/disk/disk1
+Dec 19 11:16:04 localhost /gcloud-resize.py: DEBUG ACTION="J.A.R.V.I.S Say" CODE=200 STATUS="ok"
+```
+
+## Error logs
+See `/var/log/syslog`
+```bash
+Dec 19 11:16:04 localhost /gcloud-resize.py: ERROR ACTION="Apply disk." NAME="disk-2" SOURCE="/dev/sdc" FSTYPE="xfs" REASON="Not supported file system."
 ```

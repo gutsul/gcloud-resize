@@ -4,15 +4,14 @@ import requests
 from googleapiclient import discovery
 
 from settings import PROJECT_ID
-from src import utils, parser
+from src import parser
+from src.utils import log
 
 service = discovery.build('compute', 'v1')
 
 root_url = 'http://metadata.google.internal/computeMetadata/v1/instance/'
 METADATA_HEADERS = {'Metadata-Flavor': 'Google'}
 
-
-# TODO: All methods must return json. Remove parse methods.
 
 def get_instance_name():
   url = root_url + "name"
@@ -41,20 +40,6 @@ def get_geo_zone():
   return geo_zone
 
 
-def get_attached_disks():
-  url = root_url + "disks/?recursive=true"
-
-  resp = requests.get(url, headers=METADATA_HEADERS)
-
-  if resp.status_code == 503:
-    time.sleep(1)
-    get_attached_disks()
-
-  disks = parser.parse_disks(json=resp.json())
-
-  return disks
-
-
 def get_instance(instance, zone):
   request = service.instances().get(project=PROJECT_ID, zone=zone, instance=instance)
   response = request.execute()
@@ -72,8 +57,9 @@ def resize_disk(name, size_gb, zone):
 
   result = wait_for_operation(service, project=PROJECT_ID, zone=zone, operation=response['name'])
 
-  print('DEBUG: ACTION="GCloud resize" NAME="{0}" NEW_SIZE={1} RESPONSE="{2}"'
-        .format(name, size_gb, result))
+  msg = 'DEBUG ACTION="GCloud resize" NAME="{0}" NEW_SIZE={1} RESPONSE="{2}"'\
+        .format(name, size_gb, result)
+  log(msg)
 
 
 def wait_for_operation(compute, project, zone, operation):
@@ -86,7 +72,7 @@ def wait_for_operation(compute, project, zone, operation):
       status = result['status']
 
       msg = 'DEBUG ACTION="wait resize" STATUS="{0}"'.format(status)
-      utils.log(msg)
+      log(msg)
 
       if status == 'DONE':
         if 'error' in result:
