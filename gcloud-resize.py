@@ -51,7 +51,7 @@ def apply(disk):
   if disk.fstype == EXT4:
     shell.resize_ext4_disk(label=disk.get_label())
   elif disk.fstype == XFS:
-    shell.resize_xfs_disk(label=disk.get_label)
+    shell.resize_xfs_disk(label=disk.get_label())
   else:
     msg = 'ERROR ACTION="Apply disk." NAME="{}" SOURCE="/dev/{}" FSTYPE="{}" REASON="Not supported file system."' \
         .format(disk.name, disk.get_label(), disk.fstype)

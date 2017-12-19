@@ -26,9 +26,15 @@ Add next permissions to **Cloud API access scopes** for VM instance.
 
 `gcloud-resize` tool need installed **python 3** and run with **root** permissions.
 
-### Install Python 3
+### Install Python
 ```bash
 sudo apt-get install python3-pip
+```
+
+### Install Dependencies
+```bash
+# XFS support
+sudo apt-get -y install xfsprogs
 ```
 
 ###  Gcloud-resize tool
