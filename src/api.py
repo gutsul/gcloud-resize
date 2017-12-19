@@ -57,7 +57,7 @@ def resize_disk(name, size_gb, zone):
 
   result = wait_for_operation(service, project=PROJECT_ID, zone=zone, operation=response['name'])
 
-  msg = 'DEBUG: ACTION="GCloud resize" NAME="{0}" NEW_SIZE={1} RESPONSE="{2}"'\
+  msg = 'DEBUG ACTION="GCloud resize" NAME="{0}" NEW_SIZE={1} RESPONSE="{2}"'\
         .format(name, size_gb, result)
   log(msg)
 
