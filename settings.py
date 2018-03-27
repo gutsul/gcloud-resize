@@ -1,16 +1,11 @@
-# Customized settings
+from dotenv import load_dotenv, find_dotenv
+from os import getenv
 
-# GCload Project ID
-PROJECT_ID = ''
+load_dotenv(find_dotenv())
 
-# Resize disk when free disk space < <FREE_LIMIT_PERCENT>
-FREE_LIMIT_PERCENT = 10
+PROJECT_ID = getenv("PROJECT_ID")
+FREE_LIMIT_PERCENT = getenv("FREE_LIMIT_PERCENT")
+RESIZE_PERCENT = getenv("RESIZE_PERCENT")
+SLACK_URL = getenv("SLACK_URL")
+SLACK_USERS = getenv("SLACK_USERS")
 
-# Resize disk space up to <RESIZE_PERCENT>
-RESIZE_PERCENT = 20
-
-# Slack Integration
-SLACK_URL = ''
-
-## Send message to @nickname
-SLACK_USERS = '<@username1> <@username2>'
