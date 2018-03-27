@@ -38,9 +38,7 @@ sudo apt-get install python3-pip
 sudo apt-get -y install xfsprogs
 ```
 
-###  Gcloud-resize tool
-
-* Make sure you use `arbigo-prod` or `arbigo-dev` private ssh keys for **root** user.
+### Install gcloud-resize tool
 
 ```bash
 # Clone tool to `/usr/src/gcloud-resize` folder
@@ -51,6 +49,18 @@ cd /usr/src/gcloud-resize
 
 # Install dependencies
 sudo pip3 install -r requirements.txt
+```
+
+### Configure environment
+
+Create `.env` file from sample `.env.sample` and set [settings](#settings).
+
+```
+# Go to gcloud-resize folder 
+cd /usr/src/gcloud-resize
+
+# Copy sample
+cp .env.sample .env
 ```
 
 ### Crontab
@@ -66,7 +76,8 @@ sudo crontab -e
 ```
 
 ## Settings
-Location `/usr/src/gcloud-resize/settings.py`
+
+Location `/usr/src/gcloud-resize/.env`
 
 | Key                  | Type    | Value Example                          | Description |
 | :------------------- | :-----: | -------------------------------------- | ----------- |
@@ -74,7 +85,7 @@ Location `/usr/src/gcloud-resize/settings.py`
 | `FREE_LIMIT_PERCENT` | Integer | 1 ... 99                               | **Required**. Indicates available disc space threshold at which disc space will be automatically increased.<br>The value should be greater than zero. |
 | `RESIZE_PERCENT`     | Integer | 2 ... 100                              | **Required**. Determines how much in percentage you should increase the disk when low disk space amount is detected. <br> The value should be greater than `FREE_LINIT_PERCENT`.<br>The minimum disk space you can add is **1 GB**.|
 | `SLACK_URL`          | String  | 'https://hooks.slack.com/'             | **Required**. Slack incoming webhook url.  |
-| `SLACK_USERS`        | String  | '<@username1> <@username2>' | **Required**. Users who will be notified about the resize message.   |
+| `SLACK_USERS`        | String  | '<@username1> <@username2>'            | **Required**. Users who will be notified about the resize message.   |
 
 
 ## Debug logs
