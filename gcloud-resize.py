@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from settings import RESIZE_PERCENT
-from src import api, parser, shell, jarvis
+# from src import api, parser, shell, jarvis
 from src.fstypes import XFS, EXT4
 from src.utils import no_dimen, log
 
@@ -40,48 +40,49 @@ def init(disk):
 def resize(ZONE, disk):
   add_gb = disk.increase_on(RESIZE_PERCENT)
   new_size_gb = disk.size + add_gb
-  api.resize_disk(name=disk.name, size_gb=new_size_gb, zone=ZONE)
+  # api.resize_disk(name=disk.name, size_gb=new_size_gb, zone=ZONE)
 
   msg = 'DEBUG ACTION="Resize disk." NAME="{}" ADD_GB={} NEW_SIZE_GB={}' \
       .format(disk.name, add_gb, new_size_gb)
   log(msg)
 
 
-def apply(disk):
-  if disk.fstype == EXT4:
-    shell.resize_ext4_disk(label=disk.get_label())
-  elif disk.fstype == XFS:
-    shell.resize_xfs_disk(label=disk.get_label())
-  else:
-    msg = 'ERROR ACTION="Apply disk." NAME="{}" SOURCE="/dev/{}" FSTYPE="{}" REASON="Not supported file system."' \
-        .format(disk.name, disk.get_label(), disk.fstype)
-    log(msg)
+# def apply(disk):
+#   if disk.fstype == EXT4:
+#     shell.resize_ext4_disk(label=disk.get_label())
+#   elif disk.fstype == XFS:
+#     shell.resize_xfs_disk(label=disk.get_label())
+#   else:
+#     msg = 'ERROR ACTION="Apply disk." NAME="{}" SOURCE="/dev/{}" FSTYPE="{}" REASON="Not supported file system."' \
+#         .format(disk.name, disk.get_label(), disk.fstype)
+#     log(msg)
+#
+#   msg = 'DEBUG ACTION="Apply disk." NAME="{}" SOURCE="/dev/{}" FSTYPE="{}"' \
+#       .format(disk.name, disk.get_label(), disk.fstype)
+#   log(msg)
 
-  msg = 'DEBUG ACTION="Apply disk." NAME="{}" SOURCE="/dev/{}" FSTYPE="{}"' \
-      .format(disk.name, disk.get_label(), disk.fstype)
-  log(msg)
 
-
-def main():
-  INSTANCE = api.get_instance_name()
-  ZONE = api.get_geo_zone()
-
-  instance_json = api.get_instance(instance=INSTANCE, zone=ZONE)
-
-  ENVIRONMENT = parser.environment(json=instance_json)
-
-  disks = parser.attached_disks(json=instance_json)
-
-  for disk in disks:
-    if disk.boot is False:
-      init(disk)
-
-      if disk.is_low():
-        resize(ZONE, disk)
-        apply(disk)
-        init(disk)
-        jarvis.say(instance=INSTANCE, environment=ENVIRONMENT, disk=disk)
+# def main():
+#   INSTANCE = api.get_instance_name()
+#   ZONE = api.get_geo_zone()
+#
+#   instance_json = api.get_instance(instance=INSTANCE, zone=ZONE)
+#
+#   ENVIRONMENT = parser.environment(json=instance_json)
+#
+#   disks = parser.attached_disks(json=instance_json)
+#
+#   for disk in disks:
+#     if disk.boot is False:
+#       init(disk)
+#
+#       if disk.is_low():
+#         resize(ZONE, disk)
+#         apply(disk)
+#         init(disk)
+#         jarvis.say(instance=INSTANCE, environment=ENVIRONMENT, disk=disk)
 
 
 if __name__ == '__main__':
-  main()
+  # main()
+  print("Running")

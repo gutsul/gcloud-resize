@@ -7,3 +7,4 @@ def no_dimen(line):
 
 def log(message):
   syslog.syslog(syslog.LOG_DEBUG, message)
+
