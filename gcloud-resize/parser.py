@@ -1,6 +1,6 @@
 import re
 
-from src.models import Disk
+from .models import Disk
 
 
 def parse_device_info(line):

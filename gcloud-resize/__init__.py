@@ -1,40 +1,40 @@
 #!/usr/bin/env python3
 
 from settings import RESIZE_PERCENT
-# from src import api, parser, shell, jarvis
-from src.fstypes import XFS, EXT4
-from src.utils import no_dimen, log
+# from gcloud-resize import api, parser, shell, jarvis
+from .fstypes import XFS, EXT4
+from .utils import no_dimen, log
 
 
-def init(disk):
-  label = disk.get_label()
-  line = shell.get_disk_info(label=label)
-
-  info = parser.disk_info(line)
-
-  source = info.get("source")
-
-  fstype = info.get("fstype")
-  disk.fstype = fstype
-
-  size_gb = info.get("size_gb")
-  disk.size = int(no_dimen(size_gb))
-
-  used_gb = info.get("used_gb")
-  disk.used = int(no_dimen(used_gb))
-
-  avail_gb = info.get("avail_gb")
-  disk.avail = int(no_dimen(avail_gb))
-
-  pcent = info.get("pcent")
-  disk.pcent = int(no_dimen(pcent))
-
-  target = info.get("target")
-  disk.target = target
-
-  msg = 'DEBUG ACTION="Init disk." NAME="{}" SOURCE="{}" FSTYPE="{}" SIZE_GB={} USED_GB={} USED_%={} AVAIL_GB={} TARGET={}' \
-    .format(disk.name, source, disk.fstype, disk.size, disk.used, disk.pcent, disk.avail, disk.target)
-  log(msg)
+# def init(disk):
+#   label = disk.get_label()
+#   line = shell.get_disk_info(label=label)
+#
+#   info = parser.disk_info(line)
+#
+#   source = info.get("source")
+#
+#   fstype = info.get("fstype")
+#   disk.fstype = fstype
+#
+#   size_gb = info.get("size_gb")
+#   disk.size = int(no_dimen(size_gb))
+#
+#   used_gb = info.get("used_gb")
+#   disk.used = int(no_dimen(used_gb))
+#
+#   avail_gb = info.get("avail_gb")
+#   disk.avail = int(no_dimen(avail_gb))
+#
+#   pcent = info.get("pcent")
+#   disk.pcent = int(no_dimen(pcent))
+#
+#   target = info.get("target")
+#   disk.target = target
+#
+#   msg = 'DEBUG ACTION="Init disk." NAME="{}" SOURCE="{}" FSTYPE="{}" SIZE_GB={} USED_GB={} USED_%={} AVAIL_GB={} TARGET={}' \
+#     .format(disk.name, source, disk.fstype, disk.size, disk.used, disk.pcent, disk.avail, disk.target)
+#   log(msg)
 
 
 def resize(ZONE, disk):

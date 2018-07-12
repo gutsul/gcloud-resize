@@ -41,7 +41,7 @@ sudo apt-get -y install xfsprogs
 ### Install gcloud-resize tool
 
 ```bash
-# Clone tool to `/usr/src/gcloud-resize` folder
+gcloud-resize
 sudo git clone git@github.com:gutsul/gcloud-resize.git /usr/src/gcloud-resize
 
 # Go to gcloud-resize folder 

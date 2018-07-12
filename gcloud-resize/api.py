@@ -4,8 +4,8 @@ import requests
 from googleapiclient import discovery
 
 from settings import PROJECT_ID
-from src import parser
-from src.utils import log
+from .utils import log
+import parser
 
 service = discovery.build('compute', 'v1')
 

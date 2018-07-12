@@ -3,7 +3,7 @@ import json
 import requests
 
 from settings import SLACK_URL, SLACK_USERS
-from src.utils import log
+from .utils import log
 
 
 def say(instance, environment, disk):
