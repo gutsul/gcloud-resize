@@ -1,7 +1,7 @@
 import configparser
 
-config = configparser.ConfigParser
-config.read("conf/gcloud-resize.conf")
+config = configparser.ConfigParser()
+config.read("gcloud_resize/conf/gcloud-resize.conf")
 
 
 class Config(object):

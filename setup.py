@@ -1,4 +1,5 @@
-from setuptools import setup
+
+from setuptools import setup, find_packages
 from gcloud_resize import __version__
 
 setup(
@@ -8,7 +9,7 @@ setup(
     url='https://github.com/gutsul/gcloud-resize',
     author='Yuriy Grigortsevich',
     author_email='GrigortsevichYuriy@gmail.com',
-    packages = ['gcloud_resize'],
+    packages = find_packages(exclude=('tests', 'docs')),
     install_requires=[
         'requests==2.2.1',
         'google-api-python-client==1.6.4',

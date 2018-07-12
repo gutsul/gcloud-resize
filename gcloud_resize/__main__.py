@@ -60,10 +60,23 @@
 #   msg = 'DEBUG ACTION="Apply disk." NAME="{}" SOURCE="/dev/{}" FSTYPE="{}"' \
 #       .format(disk.name, disk.get_label(), disk.fstype)
 #   log(msg)
+from gcloud_resize import config
 
 
 def main():
   print("Running")
+
+  gcloud_config = config.GCloudConfig()
+  resize_config = config.ResizeConfig()
+
+
+  print("Configs")
+  print("ProjectID: {}".format(gcloud_config.project_id))
+  print("Free limit percent: {}".format(resize_config.free_limit_percent))
+  print("Resize percent: {}".format(resize_config.resize_percent))
+
+
+
 
 #   INSTANCE = api.get_instance_name()
 #   ZONE = api.get_geo_zone()
