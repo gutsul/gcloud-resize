@@ -44,7 +44,7 @@ sudo apt-get -y install xfsprogs
 gcloud-resize
 sudo git clone git@github.com:gutsul/gcloud-resize.git /usr/src/gcloud-resize
 
-# Go to gcloud-resize folder 
+src
 cd /usr/src/gcloud-resize
 
 # Install dependencies
@@ -108,3 +108,7 @@ See `/var/log/syslog`
 ```bash
 Dec 19 11:16:04 localhost /gcloud-resize.py: ERROR ACTION="Apply disk." NAME="disk-2" SOURCE="/dev/sdc" FSTYPE="xfs" REASON="Not supported file system."
 ```
+
+
+sudo python3 setup.py install
+sudo pip3 uninstall gcloud-resize
