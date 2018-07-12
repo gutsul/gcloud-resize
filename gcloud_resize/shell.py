@@ -1,6 +1,6 @@
 import subprocess
 
-from .utils import log
+from src.utils import log
 
 
 def run(cmd):

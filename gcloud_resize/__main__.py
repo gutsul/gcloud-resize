@@ -1,9 +1,9 @@
-#!/usr/bin/env python3
 
-from settings import RESIZE_PERCENT
-# from gcloud-resize import api, parser, shell, jarvis
-from .fstypes import XFS, EXT4
-from .utils import no_dimen, log
+
+
+# from settings import RESIZE_PERCENT
+# from src import api, parser, shell, jarvis
+# from .utils import no_dimen, log
 
 
 # def init(disk):
@@ -37,14 +37,14 @@ from .utils import no_dimen, log
 #   log(msg)
 
 
-def resize(ZONE, disk):
-  add_gb = disk.increase_on(RESIZE_PERCENT)
-  new_size_gb = disk.size + add_gb
-  # api.resize_disk(name=disk.name, size_gb=new_size_gb, zone=ZONE)
-
-  msg = 'DEBUG ACTION="Resize disk." NAME="{}" ADD_GB={} NEW_SIZE_GB={}' \
-      .format(disk.name, add_gb, new_size_gb)
-  log(msg)
+# def resize(ZONE, disk):
+#   add_gb = disk.increase_on(RESIZE_PERCENT)
+#   new_size_gb = disk.size + add_gb
+#   api.resize_disk(name=disk.name, size_gb=new_size_gb, zone=ZONE)
+  #
+  # msg = 'DEBUG ACTION="Resize disk." NAME="{}" ADD_GB={} NEW_SIZE_GB={}' \
+  #     .format(disk.name, add_gb, new_size_gb)
+  # log(msg)
 
 
 # def apply(disk):
@@ -62,7 +62,9 @@ def resize(ZONE, disk):
 #   log(msg)
 
 
-# def main():
+def main():
+  print("Running")
+
 #   INSTANCE = api.get_instance_name()
 #   ZONE = api.get_geo_zone()
 #
@@ -83,6 +85,6 @@ def resize(ZONE, disk):
 #         jarvis.say(instance=INSTANCE, environment=ENVIRONMENT, disk=disk)
 
 
-if __name__ == '__main__':
-  # main()
-  print("Running")
+# if __name__ == '__main__':
+#   main()
+  #
