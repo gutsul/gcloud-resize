@@ -1,7 +1,11 @@
 import configparser
 
+from . import conf_dir, name
+
+config_path = "{0}/{1}.conf".format(conf_dir, name)
+
 config = configparser.ConfigParser()
-config.read("gcloud_resize/conf/gcloud-resize.conf")
+config.read(config_path)
 
 
 class Config(object):
