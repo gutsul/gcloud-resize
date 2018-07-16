@@ -34,19 +34,46 @@ class GCloudConfig(Config):
 
   @property
   def project_id(self):
-    return self.project_id
+    return self._project_id
 
   @project_id.setter
   def project_id(self, value):
-    if value == "": raise ValueError("ProjectId value cannot be empty.")
+    print("{} setter".format(name))
+
+    # if value == "": raise ValueError("ProjectId value cannot be empty.")
+    if value == "":
+      print("{} value cannot be empty.".format(name))
+      exit(1)
+
+    self._project_id = value
 
 
 class ResizeConfig(Config):
   _section = "Resize Settings"
 
+  def __init__(self):
+    Config.__init__(self)
+    self.free_limit_percent = self.get_property(section=self._section, name="FreeLimitPercent")
+
   @property
   def free_limit_percent(self):
-    return self.get_property(section=self._section, name="FreeLimitPercent")
+    return self._free_limit_percent
+
+  @free_limit_percent.setter
+  def free_limit_percent(self, value):
+
+    print("free_limit_percent setter")
+
+    try:
+      if int(value) < 0 or int(value) >= 100:
+        print("FreeLimitPercent value must be a number in diapazone 0-99")
+        exit(1)
+      else:
+        self._free_limit_percent = value
+
+    except ValueError:
+      print("{} value mast be a number".format(name))
+      exit(1)
 
   @property
   def resize_percent(self):
