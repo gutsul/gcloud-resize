@@ -52,6 +52,7 @@ class ResizeConfig(Config):
   def __init__(self):
     Config.__init__(self)
     self.free_limit_percent = self.get_property(section=self._section, name="FreeLimitPercent")
+    self.resize_percent = self.get_property(section=self._section, name="ResizePercent")
 
   @property
   def free_limit_percent(self):
@@ -61,7 +62,7 @@ class ResizeConfig(Config):
   def free_limit_percent(self, value):
     try:
       if int(value) < 0 or int(value) >= 100:
-        print("FreeLimitPercent value must be a number in diapazone 0-99")
+        print("{} value must be a number in diapazone 0-99".format(name))
         exit(1)
       else:
         self._free_limit_percent = value
@@ -72,7 +73,20 @@ class ResizeConfig(Config):
 
   @property
   def resize_percent(self):
-    return self.get_property(section=self._section, name="ResizePercent")
+    return self._resize_percent
+
+  @resize_percent.setter
+  def resize_percent(self, value):
+    try:
+      if int(value) > 0:
+        print("{} value must be greater than zero".format(name))
+        exit(1)
+      else:
+        self._resize_percent = value
+
+    except ValueError:
+      print("{} value mast be a number".format(name))
+      exit(1)
 
 
 class SlackConfig(Config):
