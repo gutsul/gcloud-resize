@@ -26,32 +26,40 @@ class Config(object):
 
 
 class GCloudConfig(Config):
-  section = "GCloud Settings"
+  _section = "GCloud Settings"
+
+  def __init__(self):
+    Config.__init__(self)
+    self.project_id = self.get_property(section=self._section, name="ProjectId")
 
   @property
   def project_id(self):
-    return self.get_property(section=self.section, name="ProjectId")
+    return self.project_id
+
+  @project_id.setter
+  def project_id(self, value):
+    if value == "": raise ValueError("ProjectId value cannot be empty.")
 
 
 class ResizeConfig(Config):
-  section = "Resize Settings"
+  _section = "Resize Settings"
 
   @property
   def free_limit_percent(self):
-    return self.get_property(section=self.section, name="FreeLimitPercent")
+    return self.get_property(section=self._section, name="FreeLimitPercent")
 
   @property
   def resize_percent(self):
-    return self.get_property(section=self.section, name="ResizePercent")
+    return self.get_property(section=self._section, name="ResizePercent")
 
 
 class SlackConfig(Config):
-  section = "Slack Settings"
+  _section = "Slack Settings"
 
   @property
   def webhook(self):
-    return self.get_property(section=self.section, name="SlackWebhook")
+    return self.get_property(section=self._section, name="SlackWebhook")
 
   @property
   def users(self):
-    return self.get_property(section=self.section, name="SlackUsers")
+    return self.get_property(section=self._section, name="SlackUsers")
