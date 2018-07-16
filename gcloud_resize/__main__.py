@@ -64,8 +64,6 @@ from gcloud_resize import config
 
 
 def main():
-  print("Running")
-
   gcloud_config = config.GCloudConfig()
   resize_config = config.ResizeConfig()
 
@@ -98,6 +96,5 @@ def main():
 #         jarvis.say(instance=INSTANCE, environment=ENVIRONMENT, disk=disk)
 
 
-# if __name__ == '__main__':
-#   main()
-  #
+if __name__ == '__main__':
+  main()
