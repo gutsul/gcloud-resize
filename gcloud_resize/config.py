@@ -1,9 +1,7 @@
 import configparser
 import re
 
-from . import conf_dir, name
-
-config_path = "{0}/{1}.conf".format(conf_dir, name)
+from . import config_path
 
 config = configparser.ConfigParser()
 config.read(config_path)
