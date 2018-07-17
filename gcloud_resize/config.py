@@ -1,4 +1,5 @@
 import configparser
+import re
 
 from . import conf_dir, name
 
@@ -65,7 +66,7 @@ class ResizeConfig(Config):
         print("FreeLimitPercent value must be a number in diapazone 0-99")
         exit(1)
       else:
-        self._free_limit_percent = value
+        self._free_limit_percent = int(value)
 
     except ValueError:
       print("FreeLimitPercent value mast be a number")
@@ -82,7 +83,7 @@ class ResizeConfig(Config):
         print("ResizePercent value must be greater than zero")
         exit(1)
       else:
-        self._resize_percent = value
+        self._resize_percent = int(value)
 
     except ValueError:
       print("ResizePercent value mast be a number")
@@ -92,10 +93,30 @@ class ResizeConfig(Config):
 class SlackConfig(Config):
   _section = "Slack Settings"
 
+  def __init__(self):
+    Config.__init__(self)
+    self.webhook = self.get_property(section=self._section, name="SlackWebhook")
+    self.users = self.get_property(section=self._section, name="SlackUsers")
+
   @property
   def webhook(self):
-    return self.get_property(section=self._section, name="SlackWebhook")
+    return self._webhook
+
+  @webhook.setter
+  def webhook(self, value):
+    regex = re.compile("^(?:http)s?:\/\/hooks.slack.com\/services\/[\d\w]{9}\/[\d\w]{9}\/[\d\w]{24}", re.IGNORECASE)
+    webhook = re.match(regex, value)
+
+    if webhook is None:
+      print("Slack webhook not valid.")
+      exit(1)
+
+    self._webhook = value
 
   @property
   def users(self):
-    return self.get_property(section=self._section, name="SlackUsers")
+    return self._users
+
+  @users.setter
+  def users(self, value):
+    self._users = str(value).split(sep=",")

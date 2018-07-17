@@ -66,12 +66,17 @@ from gcloud_resize import config
 def main():
   gcloud_config = config.GCloudConfig()
   resize_config = config.ResizeConfig()
+  slack_config = config.SlackConfig()
 
 
   print("Configs")
   print("ProjectID: {}".format(gcloud_config.project_id))
   print("Free limit percent: {}".format(resize_config.free_limit_percent))
   print("Resize percent: {}".format(resize_config.resize_percent))
+  print("Webhook: {}".format(slack_config.webhook))
+  print("Users:")
+  for user in slack_config.users:
+    print("- {}".format(user))
 
 
 
