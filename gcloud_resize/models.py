@@ -1,7 +1,5 @@
 import math
 
-from settings import FREE_LIMIT_PERCENT
-
 
 class Disk:
   name = None
