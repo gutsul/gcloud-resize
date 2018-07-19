@@ -1,3 +1,8 @@
+from gcloud_resize.utils import is_root
+
+if not is_root():
+  exit("\nOnly root can run this script\n")
+
 from gcloud_resize.logger import debug, error
 
 
@@ -63,6 +68,7 @@ from gcloud_resize.logger import debug, error
 from gcloud_resize import config
 
 
+
 def main():
   gcloud_config = config.GCloudConfig()
   resize_config = config.ResizeConfig()
@@ -107,3 +113,4 @@ def main():
 
 if __name__ == '__main__':
   main()
+

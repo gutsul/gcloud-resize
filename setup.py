@@ -1,6 +1,7 @@
 
-from setuptools import setup, find_packages
+from setuptools import find_packages
 from gcloud_resize import __version__, name, CONF_DIR, LOG_DIR
+from setuptools import setup
 
 setup(
   name = name,
@@ -13,8 +14,7 @@ setup(
   install_requires=[
     'requests==2.2.1',
     'google-api-python-client==1.6.4',
-    'psutil==5.4.1',
-    'python-dotenv==0.8.2',
+    'psutil==5.4.1'
   ],
   data_files = [
     (CONF_DIR, ['gcloud_resize/conf/gcloud-resize.conf']),

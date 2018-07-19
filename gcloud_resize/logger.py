@@ -1,23 +1,7 @@
-import logging.handlers
-from . import LOG_FILENAME, name
-#
-# logger = logging.getLogger(name=name)
-#
-# handler = logging.handlers.RotatingFileHandler(
-#   log_path, maxBytes=1000000, backupCount=5)
-#
-# logger.addHandler(handler)
-#
-# # formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-#
-#
-# logger.debug("Test debug message")
-# logger.info("Test info message")
-# logger.error('Error message')
-# logger.critical('Critical message')
-
+from . import LOG_FILENAME
 import logging
 import sys
+
 
 # set up formatting
 formatter = logging.Formatter('[%(asctime)s] %(levelname)s: %(message)s')
@@ -43,4 +27,5 @@ debug = mylogger.debug
 info = mylogger.info
 warning = mylogger.warning
 error = mylogger.error
-critical = mylogger.criticale
+
+
