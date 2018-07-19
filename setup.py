@@ -1,6 +1,6 @@
 
 from setuptools import setup, find_packages
-from gcloud_resize import __version__, name, conf_dir, log_dir
+from gcloud_resize import __version__, name, CONF_DIR, LOG_DIR
 
 setup(
   name = name,
@@ -17,8 +17,8 @@ setup(
     'python-dotenv==0.8.2',
   ],
   data_files = [
-    (conf_dir, ['gcloud_resize/conf/gcloud-resize.conf']),
-    (log_dir, [])
+    (CONF_DIR, ['gcloud_resize/conf/gcloud-resize.conf']),
+    (LOG_DIR, [])
   ],
   entry_points = {
     'console_scripts': [

@@ -1,4 +1,4 @@
-
+from gcloud_resize.logger import debug, error
 
 
 # from settings import RESIZE_PERCENT
@@ -77,6 +77,10 @@ def main():
   print("Users:")
   for user in slack_config.users:
     print("- {}".format(user))
+
+
+  debug("Started v2")
+  error("Error v2")
 
 
 

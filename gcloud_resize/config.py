@@ -1,10 +1,10 @@
 import configparser
 import re
 
-from . import config_path
+from . import CONFIG_FILENAME
 
 config = configparser.ConfigParser()
-config.read(config_path)
+config.read(CONFIG_FILENAME)
 
 
 class Config(object):
