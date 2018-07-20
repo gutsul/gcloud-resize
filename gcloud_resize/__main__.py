@@ -3,7 +3,7 @@ from gcloud_resize.utils import is_root
 if not is_root():
   exit("\nOnly root can run this script\n")
 
-from gcloud_resize.logger import debug, error
+from gcloud_resize.logger import debug
 
 
 # from settings import RESIZE_PERCENT
@@ -70,23 +70,8 @@ from gcloud_resize import config
 
 
 def main():
-  gcloud_config = config.GCloudConfig()
-  resize_config = config.ResizeConfig()
-  slack_config = config.SlackConfig()
-
-
-  print("Configs")
-  print("ProjectID: {}".format(gcloud_config.project_id))
-  print("Free limit percent: {}".format(resize_config.free_limit_percent))
-  print("Resize percent: {}".format(resize_config.resize_percent))
-  print("Webhook: {}".format(slack_config.webhook))
-  print("Users:")
-  for user in slack_config.users:
-    print("- {}".format(user))
-
-
-  debug("Started v2")
-  error("Error v2")
+  debug("Started")
+  # gcloud_config = config.GCloudConfig()
 
 
 
