@@ -2,7 +2,7 @@ import configparser
 import re
 
 from . import CONFIG_FILENAME
-from gcloud_resize.logger import debug, error
+from .logger import error
 
 config = configparser.ConfigParser()
 config.read(CONFIG_FILENAME)

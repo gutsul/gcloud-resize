@@ -70,7 +70,7 @@ from gcloud_resize import config
 
 
 def main():
-  debug("Started")
+  debug("Run")
   # gcloud_config = config.GCloudConfig()
 
 
