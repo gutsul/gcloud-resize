@@ -2,38 +2,48 @@ import time
 
 import requests
 from googleapiclient import discovery
-
-from settings import PROJECT_ID
-from src.utils import log
 import parser
+from .logger import error
 
 service = discovery.build('compute', 'v1')
 
-root_url = 'http://metadata.google.internal/computeMetadata/v1/instance/'
-METADATA_HEADERS = {'Metadata-Flavor': 'Google'}
+
+class InstanceDetails(object):
+  _root_url = 'http://metadata.google.internal/computeMetadata/v1/instance/'
+  _metadata_headers = {'Metadata-Flavor': 'Google'}
+
+  def __init__(self):
+    self._name = self._get_name()
+    self._zome = self._get_zone()
 
 
-def get_instance_name():
-  url = root_url + "name"
+  @property
+  def name(self):
+    return self._name
 
-  resp = requests.get(url, headers=METADATA_HEADERS)
 
-  if resp.status_code == 503:
-    time.sleep(1)
-    get_instance_name()
+  def _get_name(self):
+    url = self._root_url + "name"
+    resp = requests.get(url=url, headers= self._metadata_headers)
 
-  name = resp.text
-  return name
+    if resp.status_code != 200:
+      error("Cannot get instance name. Response status code is {}".format(resp.status_code))
+      exit(1)
+
+    name = resp.text
+    return name
+
+  def _get_zone(self):
+    url = self._root_url + "zone"
+    resp = requests.get(url=url, headers=self._metadata_headers)
+
+    if resp.status_code != 200:
+      error("Cannot get instance zone. Response status code is {}".format(resp.status_code))
+      exit(1)
 
 
 def get_geo_zone():
-  url = root_url + "zone"
 
-  resp = requests.get(url, headers=METADATA_HEADERS)
-
-  if resp.status_code == 503:
-    time.sleep(1)
-    get_geo_zone()
 
   geo_zone = parser.parse_geo_zone(resp.text)
 
