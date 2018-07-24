@@ -13,15 +13,6 @@ def parse_device_info(line):
   return label, mountpoint
 
 
-def parse_geo_zone(line):
-  regex = re.compile("\/zones\/([a-z|\D|\d]+)")
-  search = regex.search(line)
-
-  geo_zone = search.group(1)
-
-  return geo_zone
-
-
 def disk_info(line):
   regex = re.compile("[\w\/%]+")
   list = regex.findall(line)
@@ -38,13 +29,6 @@ def disk_info(line):
 
   return info
 
-
-def environment(json):
-  try:
-    environment = json["labels"]["environment"]
-  except:
-    environment = "Unknown"
-  return environment
 
 
 def attached_disks(json):

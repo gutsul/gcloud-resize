@@ -4,10 +4,7 @@ if not is_root():
   exit("\nOnly root can run this script\n")
 
 from gcloud_resize.logger import debug
-
-
-from src import api, parser, shell, jarvis
-from .utils import no_dimen
+from gcloud_resize.utils import no_dimen
 
 
 def init(disk):
@@ -66,11 +63,8 @@ def apply(disk):
   log(msg)
 
 
-from gcloud_resize import config
-
 def main():
   debug("Run")
-  # gcloud_config = config.GCloudConfig()
 
 
   INSTANCE = api.get_instance_name()
@@ -78,7 +72,6 @@ def main():
 
   instance_json = api.get_instance(instance=INSTANCE, zone=ZONE)
 
-  ENVIRONMENT = parser.environment(json=instance_json)
 
   disks = parser.attached_disks(json=instance_json)
 

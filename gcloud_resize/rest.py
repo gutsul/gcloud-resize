@@ -1,11 +1,13 @@
+import re
 import time
 
 import requests
 from googleapiclient import discovery
-import parser
-from .logger import error
+from gcloud_resize import config
+from gcloud_resize.logger import error
 
 service = discovery.build('compute', 'v1')
+gcloud = config.GCloudConfig()
 
 
 class InstanceDetails(object):
@@ -14,13 +16,21 @@ class InstanceDetails(object):
 
   def __init__(self):
     self._name = self._get_name()
-    self._zome = self._get_zone()
-
+    self._zone = self._get_zone()
+    self._json = self._get_json_info()
+    self._environment = self._get_environment()
 
   @property
   def name(self):
     return self._name
 
+  @property
+  def zone(self):
+    return self._zone
+
+  @property
+  def environment(self):
+    return self._environment
 
   def _get_name(self):
     url = self._root_url + "name"
@@ -41,19 +51,26 @@ class InstanceDetails(object):
       error("Cannot get instance zone. Response status code is {}".format(resp.status_code))
       exit(1)
 
+    regex = re.compile("(?:\w|-)+$")
+    zone = regex.search(resp.text)
 
-def get_geo_zone():
+    return zone
+
+  # TODO: Add try/accept and error msg.
+  def _get_json_info(self):
+    request = service.instances().get(project=gcloud.project_id, zone=self.zone, instance=self.name)
+    response = request.execute()
+    return response
+
+  def _get_environment(self):
+    try:
+      environment = self._json["labels"]["environment"]
+    except:
+      environment = "Unknown"
+    return environment
 
 
-  geo_zone = parser.parse_geo_zone(resp.text)
 
-  return geo_zone
-
-
-def get_instance(instance, zone):
-  request = service.instances().get(project=PROJECT_ID, zone=zone, instance=instance)
-  response = request.execute()
-  return response
 
 
 def resize_disk(name, size_gb, zone):
@@ -69,7 +86,6 @@ def resize_disk(name, size_gb, zone):
 
   msg = 'DEBUG ACTION="GCloud resize" NAME="{0}" NEW_SIZE={1} RESPONSE="{2}"'\
         .format(name, size_gb, result)
-  log(msg)
 
 
 def wait_for_operation(compute, project, zone, operation):
@@ -82,7 +98,7 @@ def wait_for_operation(compute, project, zone, operation):
       status = result['status']
 
       msg = 'DEBUG ACTION="wait resize" STATUS="{0}"'.format(status)
-      log(msg)
+
 
       if status == 'DONE':
         if 'error' in result:
