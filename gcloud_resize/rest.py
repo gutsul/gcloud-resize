@@ -5,9 +5,56 @@ import requests
 from googleapiclient import discovery
 from gcloud_resize import config
 from gcloud_resize.logger import error
+from math import ceil
 
 service = discovery.build('compute', 'v1')
 gcloud = config.GCloudConfig()
+resize = config.ResizeConfig()
+
+
+class Disk:
+  fstype = None
+  target = None
+
+  size = 0
+  used = 0
+  avail = 0
+  pcent = 0
+
+  add_gb = 0
+
+  def __init__(self, name, index, boot):
+    self._name = name
+    self._label = "sd" + chr(97 + index)
+    self._boot = boot
+
+  @property
+  def name(self):
+    return self._name
+
+  @property
+  def label(self):
+    return self._label
+
+  @property
+  def boot(self):
+    return self._boot
+
+
+
+  def is_low(self):
+    free_percent = 100 - self.pcent
+
+    if free_percent <= FREE_LIMIT_PERCENT:
+      return True
+    else:
+      return False
+
+  def increase_on(self, percent):
+    total_gb = self.size
+    self.add_gb = ceil((percent / 100) * total_gb)
+
+    return self.add_gb
 
 
 class InstanceDetails(object):
