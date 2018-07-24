@@ -11,21 +11,3 @@ def parse_device_info(line):
   return label, mountpoint
 
 
-# def disk_info(line):
-#   regex = re.compile("[\w\/%]+")
-#   list = regex.findall(line)
-#
-#   info = {
-#     "source": list[0],
-#     "fstype": list[1],
-#     "size_gb": list[2],
-#     "used_gb": list[3],
-#     "avail_gb": list[4],
-#     "pcent": list[5],
-#     "target": list[6]
-#   }
-#
-#   return info
-
-
-

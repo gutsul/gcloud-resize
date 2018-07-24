@@ -58,17 +58,33 @@ class Disk:
   def size(self):
     return self._size
 
+  @size.setter
+  def size(self, value):
+    self._size = int(value[:-1])
+
   @property
   def used(self):
     return self._used
+
+  @used.setter
+  def used(self, value):
+    self._used = int(value[:-1])
 
   @property
   def avail(self):
     return self._avail
 
+  @avail.setter
+  def avail(self, value):
+    self._avail = int(value[:-1])
+
   @property
   def pcent(self):
     return self._pcent
+
+  @pcent.setter
+  def pcent(self, value):
+    self._pcent = int(value[:-1])
 
   # def is_low(self):
   #   free_percent = 100 - self.pcent
@@ -172,10 +188,10 @@ def resize_disk(name, size_gb, zone):
     "sizeGb": size_gb
   }
 
-  request = service.disks().resize(project=PROJECT_ID, zone=zone, disk=name, body=disks_resize_request_body)
+  request = service.disks().resize(project=gcloud.project_id, zone=zone, disk=name, body=disks_resize_request_body)
   response = request.execute()
 
-  result = wait_for_operation(service, project=PROJECT_ID, zone=zone, operation=response['name'])
+  result = wait_for_operation(service, project=gcloud.project_id, zone=zone, operation=response['name'])
 
   msg = 'DEBUG ACTION="GCloud resize" NAME="{0}" NEW_SIZE={1} RESPONSE="{2}"'\
         .format(name, size_gb, result)

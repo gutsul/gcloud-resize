@@ -1,6 +1,8 @@
 import re
 import subprocess
 
+from gcloud_resize.logger import info
+
 
 def run(cmd):
   output = None
@@ -45,3 +47,8 @@ def init_disk(disk):
   disk.avail = list[4]
   disk.pcent = list[5]
   disk.target = list[6]
+
+  msg = 'Initialized disk {}: name={} boot={} source={} target={} fstype={}\n size={}Gb used={}Gb used={}% avail={}Gb' \
+       .format(disk.label, disk.name, disk.boot, disk.source, disk.target, disk.fstype, disk.size, disk.used, disk.pcent, disk.avail)
+
+  info(msg)
