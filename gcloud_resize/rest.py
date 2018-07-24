@@ -3,7 +3,7 @@ import time
 
 import requests
 from googleapiclient import discovery
-from gcloud_resize import config
+from gcloud_resize import config, shell
 from gcloud_resize.logger import error
 from math import ceil
 
@@ -13,20 +13,22 @@ resize = config.ResizeConfig()
 
 
 class Disk:
-  fstype = None
-  target = None
-
-  size = 0
-  used = 0
-  avail = 0
-  pcent = 0
-
-  add_gb = 0
 
   def __init__(self, name, index, boot):
     self._name = name
     self._label = "sd" + chr(97 + index)
     self._boot = boot
+    self._source = None
+    self._fstype = None
+    self._target = None
+    self._size = 0
+    self._used = 0
+    self._avail = 0
+    self._pcent = 0
+    # TODO: ? yes or not
+    # self._add_gb = 0
+
+    shell.init_disk(self)
 
   @property
   def name(self):
@@ -40,21 +42,47 @@ class Disk:
   def boot(self):
     return self._boot
 
+  @property
+  def source(self):
+    return self._source
 
+  @property
+  def fstype(self):
+    return self._fstype
 
-  def is_low(self):
-    free_percent = 100 - self.pcent
+  @property
+  def target(self):
+    return self._target
 
-    if free_percent <= FREE_LIMIT_PERCENT:
-      return True
-    else:
-      return False
+  @property
+  def size(self):
+    return self._size
 
-  def increase_on(self, percent):
-    total_gb = self.size
-    self.add_gb = ceil((percent / 100) * total_gb)
+  @property
+  def used(self):
+    return self._used
 
-    return self.add_gb
+  @property
+  def avail(self):
+    return self._avail
+
+  @property
+  def pcent(self):
+    return self._pcent
+
+  # def is_low(self):
+  #   free_percent = 100 - self.pcent
+  #
+  #   if free_percent <= resize.free_limit_percent:
+  #     return True
+  #   else:
+  #     return False
+  #
+  # def increase_on(self, percent):
+  #   total_gb = self.size
+  #   self.add_gb = ceil((percent / 100) * total_gb)
+  #
+  #   return self.add_gb
 
 
 class InstanceDetails(object):
@@ -64,8 +92,10 @@ class InstanceDetails(object):
   def __init__(self):
     self._name = self._get_name()
     self._zone = self._get_zone()
-    self._json = self._get_json_info()
-    self._environment = self._get_environment()
+    self._json = self._get_json_info(name=self._name, zone=self._zone)
+
+    self._environment = self._get_environment(json=self._json)
+    self._disks = self._get_attached_disks(json=self._json)
 
   @property
   def name(self):
@@ -78,6 +108,10 @@ class InstanceDetails(object):
   @property
   def environment(self):
     return self._environment
+
+  @property
+  def disks(self):
+    return self._disks
 
   def _get_name(self):
     url = self._root_url + "name"
@@ -104,18 +138,30 @@ class InstanceDetails(object):
     return zone
 
   # TODO: Add try/accept and error msg.
-  def _get_json_info(self):
-    request = service.instances().get(project=gcloud.project_id, zone=self.zone, instance=self.name)
+  def _get_json_info(self, zone, name):
+    request = service.instances().get(project=gcloud.project_id, zone=zone, instance=name)
     response = request.execute()
     return response
 
-  def _get_environment(self):
+  def _get_environment(self, json):
     try:
-      environment = self._json["labels"]["environment"]
+      environment = json["labels"]["environment"]
     except:
       environment = "Unknown"
     return environment
 
+  def _get_attached_disks(self, json):
+    disks = []
+
+    for item in json["disks"]:
+      name = item["deviceName"]
+      index = item["index"]
+      boot = item["boot"]
+
+      disk = Disk(name=name, index=index, boot=boot)
+      disks.append(disk)
+
+    return disks
 
 
 

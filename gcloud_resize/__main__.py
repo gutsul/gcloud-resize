@@ -8,10 +8,10 @@ from gcloud_resize.utils import no_dimen
 
 
 def init(disk):
-  label = disk.get_label()
-  line = shell.get_disk_info(label=label)
+  # label = disk.get_label()
+  # line = shell.get_disk_info(label=label)
 
-  info = parser.disk_info(line)
+  # info = parser.disk_info(line)
 
   source = info.get("source")
 
@@ -67,10 +67,10 @@ def main():
   debug("Run")
 
 
-  INSTANCE = api.get_instance_name()
-  ZONE = api.get_geo_zone()
+  # INSTANCE = api.get_instance_name()
+  # ZONE = api.get_geo_zone()
 
-  instance_json = api.get_instance(instance=INSTANCE, zone=ZONE)
+  # instance_json = api.get_instance(instance=INSTANCE, zone=ZONE)
 
 
   disks = parser.attached_disks(json=instance_json)

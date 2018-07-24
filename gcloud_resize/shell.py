@@ -1,6 +1,5 @@
+import re
 import subprocess
-
-from .utils import log
 
 
 def run(cmd):
@@ -15,7 +14,7 @@ def run(cmd):
 
   except:
     msg = 'ERROR  CMD="{0}"'.format(cmd)
-    log(msg)
+    # log(msg)
 
   return output
 
@@ -30,10 +29,19 @@ def resize_xfs_disk(label):
   run(cmd)
 
 
-def get_disk_info(label):
-  cmd = "sudo df -BG --output=source,fstype,size,used,avail,pcent,target /dev/{0}".format(label)
+def init_disk(disk):
+  cmd = "sudo df -BG --output=source,fstype,size,used,avail,pcent,target /dev/{0}".format(disk.label)
 
   output = run(cmd)
   result = output.split("\n")[1]
 
-  return result
+  regex = re.compile("[\w\/%]+")
+  list = regex.findall(result)
+
+  disk.source = list[0]
+  disk.fstype = list[1]
+  disk.size = list[2]
+  disk.used = list[3]
+  disk.avail = list[4]
+  disk.pcent = list[5]
+  disk.target = list[6]
