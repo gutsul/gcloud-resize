@@ -37,7 +37,10 @@ def main():
 
   instance = rest.InstanceDetails()
 
-  instance.disks
+  print("Disk info")
+
+  for disk in instance.disks:
+    print("Name: {}".format(disk.name))
 
   # for disk in disks:
   #   if disk.boot is False:
