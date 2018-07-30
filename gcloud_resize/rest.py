@@ -4,7 +4,7 @@ import time
 import requests
 from googleapiclient import discovery
 from gcloud_resize import config, shell
-from gcloud_resize.logger import error, debug
+from gcloud_resize.logger import error
 from math import ceil
 
 service = discovery.build('compute', 'v1')
