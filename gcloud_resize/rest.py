@@ -153,7 +153,7 @@ class InstanceDetails(object):
       exit(1)
 
     regex = re.compile("(?:\w|-)+$")
-    zone = regex.search(resp.text)
+    zone = regex.search(resp.text).group()
 
     return zone
 
