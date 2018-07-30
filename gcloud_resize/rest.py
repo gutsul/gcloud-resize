@@ -4,7 +4,7 @@ import time
 import requests
 from googleapiclient import discovery
 from gcloud_resize import config, shell
-from gcloud_resize.logger import error
+from gcloud_resize.logger import error, debug
 from math import ceil
 
 service = discovery.build('compute', 'v1')
@@ -157,6 +157,9 @@ class InstanceDetails(object):
   def _get_json_info(self, zone, name):
     request = service.instances().get(project=gcloud.project_id, zone=zone, instance=name)
     response = request.execute()
+
+    debug(response)
+
     return response
 
   def _get_environment(self, json):

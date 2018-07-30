@@ -1,9 +1,9 @@
-from gcloud_resize import rest
 from gcloud_resize.utils import is_root
 
 if not is_root():
   exit("\nOnly root can run this script\n")
 
+from gcloud_resize import rest
 from gcloud_resize.logger import debug
 
 
