@@ -46,13 +46,26 @@ class Disk:
   def source(self):
     return self._source
 
+  @source.setter
+  def source(self, value):
+    self._source = value
+
   @property
   def fstype(self):
     return self._fstype
 
+  # TODO: Add fstype validation
+  @fstype.setter
+  def fstype(self, value):
+    self._fstype = value
+
   @property
   def target(self):
     return self._target
+
+  @target.setter
+  def target(self, value):
+    self._target = value
 
   @property
   def size(self):
