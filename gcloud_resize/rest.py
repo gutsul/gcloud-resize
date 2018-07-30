@@ -4,7 +4,7 @@ import time
 import requests
 from googleapiclient import discovery
 from gcloud_resize import config, shell
-from gcloud_resize.logger import error
+from gcloud_resize.logger import error, info
 from math import ceil
 
 service = discovery.build('compute', 'v1')
@@ -13,6 +13,9 @@ resize = config.ResizeConfig()
 
 
 class Disk:
+  XFS = 'xfs'
+  EXT4 = 'ext4'
+  SUPPORTED_FSTYPES = [XFS, EXT4]
 
   def __init__(self, name, index, boot):
     self._name = name
@@ -25,8 +28,6 @@ class Disk:
     self._used = 0
     self._avail = 0
     self._pcent = 0
-    # TODO: ? yes or not
-    # self._add_gb = 0
 
     shell.init_disk(self)
 
@@ -99,19 +100,18 @@ class Disk:
   def pcent(self, value):
     self._pcent = int(value[:-1])
 
-  # def is_low(self):
-  #   free_percent = 100 - self.pcent
-  #
-  #   if free_percent <= resize.free_limit_percent:
-  #     return True
-  #   else:
-  #     return False
-  #
-  # def increase_on(self, percent):
-  #   total_gb = self.size
-  #   self.add_gb = ceil((percent / 100) * total_gb)
-  #
-  #   return self.add_gb
+  def low(self):
+    free_percent = 100 - self.pcent
+
+    if free_percent <= resize.free_limit_percent:
+      return True
+    else:
+      return False
+
+  def increase_size(self):
+    add_gb = ceil((resize.resize_percent / 100) * self.size)
+    new_size_gb = self.size + add_gb
+    return new_size_gb
 
 
 class InstanceDetails(object):
@@ -192,25 +192,34 @@ class InstanceDetails(object):
 
     return disks
 
+  def apply_changes(self, disk):
 
+    if disk.fstype in disk.supported_fstypes:
 
+      if disk.fstype == disk.EXT4:
+        shell.resize_ext4(disk)
+      elif disk.fstype == disk.XFS:
+        shell.resize_xfs(disk)
 
-def resize_disk(name, size_gb, zone):
+      info("Disk '{}' [{}]: Changes have been applied successfully.".format(disk.name, disk.label))
 
-  disks_resize_request_body = {
-    "sizeGb": size_gb
-  }
+    else:
+      error("Disk '{}' [{}]: Can't apply changes. Not supported file system '{}'.".format(disk.name, disk.label, disk.fstype))
 
-  request = service.disks().resize(project=gcloud.project_id, zone=zone, disk=name, body=disks_resize_request_body)
-  response = request.execute()
+  def send_request_to_resize(self, disk):
+    new_size_gb = disk.increase_size()
 
-  result = wait_for_operation(service, project=gcloud.project_id, zone=zone, operation=response['name'])
+    disks_resize_request_body = {
+      "sizeGb": new_size_gb
+    }
 
-  msg = 'DEBUG ACTION="GCloud resize" NAME="{0}" NEW_SIZE={1} RESPONSE="{2}"'\
-        .format(name, size_gb, result)
+    request = service.disks().resize(project=gcloud.project_id, zone=self.zone, disk=disk.name, body=disks_resize_request_body)
+    response = request.execute()
+    result = self._wait_for_operation(service, project=gcloud.project_id, zone=self.zone, operation=response['name'])
 
+    info("Disk '{}' [{}]: Send request to resize disk from {}Gb to {}Gb. Response: {}".format(disk.name, disk.label, disk.size, new_size_gb, result))
 
-def wait_for_operation(compute, project, zone, operation):
+  def _wait_for_operation(compute, project, zone, operation):
     while True:
       result = compute.zoneOperations().get(
         project=project,

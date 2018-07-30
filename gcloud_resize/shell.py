@@ -21,13 +21,13 @@ def run(cmd):
   return output
 
 
-def resize_ext4_disk(label):
-  cmd = "sudo resize2fs /dev/{0}".format(label)
+def resize_ext4(disk):
+  cmd = "sudo resize2fs /dev/{0}".format(disk.label)
   run(cmd)
 
 
-def resize_xfs_disk(label):
-  cmd = "sudo xfs_growfs /dev/{0}".format(label)
+def resize_xfs(disk):
+  cmd = "sudo xfs_growfs /dev/{0}".format(disk.label)
   run(cmd)
 
 
