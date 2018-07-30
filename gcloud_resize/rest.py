@@ -108,6 +108,10 @@ class InstanceDetails(object):
   def __init__(self):
     self._name = self._get_name()
     self._zone = self._get_zone()
+
+    debug("Instance Name: [{0}]".format(self.name))
+    debug("Instance Zone: [{0}]".format(self.zone))
+
     self._json = self._get_json_info(name=self._name, zone=self._zone)
 
     self._environment = self._get_environment(json=self._json)
