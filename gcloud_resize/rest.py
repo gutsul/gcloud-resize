@@ -121,12 +121,7 @@ class InstanceDetails(object):
   def __init__(self):
     self._name = self._get_name()
     self._zone = self._get_zone()
-
-    debug("Instance Name: [{0}]".format(self.name))
-    debug("Instance Zone: [{0}]".format(self.zone))
-
     self._json = self._get_json_info(name=self._name, zone=self._zone)
-
     self._environment = self._get_environment(json=self._json)
     self._disks = self._get_attached_disks(json=self._json)
 
@@ -174,8 +169,6 @@ class InstanceDetails(object):
   def _get_json_info(self, zone, name):
     request = service.instances().get(project=gcloud.project_id, zone=zone, instance=name)
     response = request.execute()
-
-    debug(response)
 
     return response
 
