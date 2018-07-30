@@ -10,7 +10,7 @@ from gcloud_resize.logger import info, debug
 def main():
   instance = rest.InstanceDetails()
 
-  info("Instance '{}' [{}]: Run.".format(instance.name, instance.zone))
+  info("Instance '{}' [{}]: Run on '{}' environment.".format(instance.name, instance.zone, instance.environment))
 
   for disk in instance.disks:
 
@@ -21,12 +21,7 @@ def main():
         info("Disk '{}' [{}]: A disk has a low space. ".format(disk.name, disk.label))
         # response = instance.send_request_to_resize(disk)
         # instance.apply_changes(disk)
-    #     send message to slack
+        # send message to slack
 
     else:
-      debug("Disk '{}' [{}]: Disk is boot.".format(disk.name, disk.label))
-
-
-# if __name__ == '__main__':
-#   main()
-
+      debug("Disk '{}' [{}]: Disk is boot. Nothing to do.".format(disk.name, disk.label))
