@@ -112,3 +112,7 @@ Dec 19 11:16:04 localhost /gcloud-resize.py: ERROR ACTION="Apply disk." NAME="di
 
 sudo python3 setup.py install
 sudo pip3 uninstall gcloud-resize
+
+
+
+sudo pip install pyasn1 --upgrade
