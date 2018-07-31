@@ -103,12 +103,14 @@ class SlackConfig(Config):
 
   @webhook.setter
   def webhook(self, value):
-    regex = re.compile("^(?:http)s?:\/\/hooks.slack.com\/services\/[\d\w]{9}\/[\d\w]{9}\/[\d\w]{24}", re.IGNORECASE)
-    webhook = re.match(regex, value)
 
-    if webhook is None:
-      error("Slack webhook not valid.")
-      exit(1)
+    if value != "":
+      regex = re.compile("^(?:http)s?:\/\/hooks.slack.com\/services\/[\d\w]{9}\/[\d\w]{9}\/[\d\w]{24}", re.IGNORECASE)
+      webhook = re.match(regex, value)
+
+      if webhook is None:
+        error("Slack webhook not valid.")
+        exit(1)
 
     self._webhook = value
 
