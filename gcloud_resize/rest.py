@@ -194,7 +194,7 @@ class InstanceDetails(object):
 
   def apply_changes(self, disk):
 
-    if disk.fstype in disk.supported_fstypes:
+    if disk.fstype in disk.SUPPORTED_FSTYPES:
 
       if disk.fstype == disk.EXT4:
         shell.resize_ext4(disk)
