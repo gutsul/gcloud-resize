@@ -4,7 +4,7 @@ import sys
 
 
 # set up formatting
-formatter = logging.Formatter('[%(asctime)s] %(levelname)s: %(message)s')
+formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
 
 # set up logging to STDOUT for all levels DEBUG and higher
 sh = logging.StreamHandler(sys.stdout)
