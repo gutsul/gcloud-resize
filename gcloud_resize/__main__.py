@@ -20,8 +20,8 @@ def main():
 
       if disk.low():
         info("Disk '{}' [{}]: A disk has a low space. ".format(disk.name, disk.label))
-        # response = instance.send_request_to_resize(disk)
-        # instance.apply_changes(disk)
-        # slack.post(disk)
+        response = instance.send_request_to_resize(disk)
+        instance.apply_changes(disk)
+        slack.post(disk)
     else:
       debug("Disk '{}' [{}]: Disk is boot. Nothing to do.".format(disk.name, disk.label))
