@@ -4,7 +4,7 @@ import time
 import requests
 from googleapiclient import discovery
 from gcloud_resize import config, shell
-from gcloud_resize.logger import error, info
+from gcloud_resize.logger import error, info, debug
 from math import ceil
 
 service = discovery.build('compute', 'v1')
@@ -219,7 +219,7 @@ class InstanceDetails(object):
 
     info("Disk '{}' [{}]: Send request to resize disk from {}Gb to {}Gb. Response: {}".format(disk.name, disk.label, disk.size, new_size_gb, result))
 
-  def _wait_for_operation(compute, project, zone, operation):
+  def _wait_for_operation(self, compute, project, zone, operation):
     while True:
       result = compute.zoneOperations().get(
         project=project,
@@ -228,7 +228,7 @@ class InstanceDetails(object):
 
       status = result['status']
 
-      msg = 'DEBUG ACTION="wait resize" STATUS="{0}"'.format(status)
+      debug("Wait for operation from GCloud API. Response: {}".format(result))
 
 
       if status == 'DONE':
