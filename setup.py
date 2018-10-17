@@ -14,7 +14,7 @@ setup(
   install_requires=[
     'requests==2.2.1',
     'google-api-python-client==1.6.4',
-    'psutil==5.4.1'
+    'psutil==5.4.7'
   ],
   data_files = [
     (CONF_DIR, ['gcloud_resize/conf/gcloud-resize.conf']),
