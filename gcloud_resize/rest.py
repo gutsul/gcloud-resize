@@ -169,7 +169,7 @@ class InstanceDetails(object):
   def _get_json_info(self, zone, name):
     request = service.instances().get(project=gcloud.project_id, zone=zone, instance=name)
     response = request.execute()
-
+    debug("get_json_info: {}".format(response))
     return response
 
   def _get_environment(self, json):
