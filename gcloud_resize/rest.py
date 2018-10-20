@@ -230,7 +230,6 @@ class InstanceDetails(object):
 
       debug("Wait for operation from GCloud API. Response: {}".format(result))
 
-
       if status == 'DONE':
         if 'error' in result:
           raise Exception(result['error'])
