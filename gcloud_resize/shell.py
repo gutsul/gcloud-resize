@@ -22,17 +22,17 @@ def run(cmd):
 
 
 def resize_ext4(disk):
-  cmd = "sudo resize2fs /dev/{0}".format(disk.label)
+  cmd = "sudo resize2fs /dev/{0}".format(disk.device)
   run(cmd)
 
 
 def resize_xfs(disk):
-  cmd = "sudo xfs_growfs /dev/{0}".format(disk.label)
+  cmd = "sudo xfs_growfs /dev/{0}".format(disk.device)
   run(cmd)
 
 
 def init_disk(disk):
-  cmd = "sudo df -BG --output=source,fstype,size,used,avail,pcent,target /dev/{0}".format(disk.label)
+  cmd = "sudo df -BG --output=source,fstype,size,used,avail,pcent,target /dev/{0}".format(disk.device)
 
   output = run(cmd)
   result = output.split("\n")[1]
@@ -49,6 +49,6 @@ def init_disk(disk):
   disk.target = list[6]
 
   msg = 'Initialized disk {}: name={} boot={} source={} target={} fstype={}\n size={}Gb used={}Gb used={}% avail={}Gb' \
-       .format(disk.label, disk.name, disk.boot, disk.source, disk.target, disk.fstype, disk.size, disk.used, disk.pcent, disk.avail)
+       .format(disk.device, disk.name, disk.boot, disk.source, disk.target, disk.fstype, disk.size, disk.used, disk.pcent, disk.avail)
 
   info(msg)

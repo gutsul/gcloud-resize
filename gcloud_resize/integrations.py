@@ -56,9 +56,9 @@ class Slack(object):
       r = requests.post(slack.webhook, data=json.dumps(payload))
 
       if r.status_code == 200:
-        info("Disk '{}' [{}]: Slack message send successfully.".format(disk.name, disk.label))
+        info("Disk '{}' [{}]: Slack message send successfully.".format(disk.name, disk.device))
       else:
-        error("Disk '{}' [{}]: Can't send message to SLACK. Response: {}".format(disk.name, disk.label, r.text))
+        error("Disk '{}' [{}]: Can't send message to SLACK. Response: {}".format(disk.name, disk.device, r.text))
 
 
 

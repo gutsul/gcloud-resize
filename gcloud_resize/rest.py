@@ -5,113 +5,10 @@ import requests
 from googleapiclient import discovery
 from gcloud_resize import config, shell
 from gcloud_resize.logger import error, info, debug
-from math import ceil
 
 service = discovery.build('compute', 'v1')
 gcloud = config.GCloudConfig()
-resize = config.ResizeConfig()
 
-
-class Disk:
-  XFS = 'xfs'
-  EXT4 = 'ext4'
-  SUPPORTED_FSTYPES = [XFS, EXT4]
-
-  def __init__(self, name, index, boot):
-    self._name = name
-    self._label = "sd" + chr(97 + index)
-    self._boot = boot
-    self._source = None
-    self._fstype = None
-    self._target = None
-    self._size = 0
-    self._used = 0
-    self._avail = 0
-    self._pcent = 0
-
-    shell.init_disk(self)
-
-  @property
-  def name(self):
-    return self._name
-
-  @property
-  def label(self):
-    return self._label
-
-  @property
-  def boot(self):
-    return self._boot
-
-  @property
-  def source(self):
-    return self._source
-
-  @source.setter
-  def source(self, value):
-    self._source = value
-
-  @property
-  def fstype(self):
-    return self._fstype
-
-  # TODO: Add fstype validation
-  @fstype.setter
-  def fstype(self, value):
-    self._fstype = value
-
-  @property
-  def target(self):
-    return self._target
-
-  @target.setter
-  def target(self, value):
-    self._target = value
-
-  @property
-  def size(self):
-    return self._size
-
-  @size.setter
-  def size(self, value):
-    self._size = int(value[:-1])
-
-  @property
-  def used(self):
-    return self._used
-
-  @used.setter
-  def used(self, value):
-    self._used = int(value[:-1])
-
-  @property
-  def avail(self):
-    return self._avail
-
-  @avail.setter
-  def avail(self, value):
-    self._avail = int(value[:-1])
-
-  @property
-  def pcent(self):
-    return self._pcent
-
-  @pcent.setter
-  def pcent(self, value):
-    self._pcent = int(value[:-1])
-
-  def low(self):
-    free_percent = 100 - self.pcent
-
-    if free_percent <= resize.free_limit_percent:
-      return True
-    else:
-      return False
-
-  def increase_size(self):
-    add_gb = ceil((resize.resize_percent / 100) * self.size)
-    new_size_gb = self.size + add_gb
-    return new_size_gb
 
 
 class InstanceDetails(object):
@@ -201,10 +98,10 @@ class InstanceDetails(object):
       elif disk.fstype == disk.XFS:
         shell.resize_xfs(disk)
 
-      info("Disk '{}' [{}]: Changes have been applied successfully.".format(disk.name, disk.label))
+      info("Disk '{}' [{}]: Changes have been applied successfully.".format(disk.name, disk.device))
 
     else:
-      error("Disk '{}' [{}]: Can't apply changes. Not supported file system '{}'.".format(disk.name, disk.label, disk.fstype))
+      error("Disk '{}' [{}]: Can't apply changes. Not supported file system '{}'.".format(disk.name, disk.device, disk.fstype))
 
   def send_request_to_resize(self, disk):
     new_size_gb = disk.increase_size()
@@ -217,7 +114,7 @@ class InstanceDetails(object):
     response = request.execute()
     result = self._wait_for_operation(service, project=gcloud.project_id, zone=self.zone, operation=response['name'])
 
-    info("Disk '{}' [{}]: Send request to resize disk from {}Gb to {}Gb. Response: {}".format(disk.name, disk.label, disk.size, new_size_gb, result))
+    info("Disk '{}' [{}]: Send request to resize disk from {}Gb to {}Gb. Response: {}".format(disk.name, disk.device, disk.size, new_size_gb, result))
 
   def _wait_for_operation(self, compute, project, zone, operation):
     while True:
