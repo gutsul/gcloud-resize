@@ -1,5 +1,3 @@
-from math import ceil
-
 import psutil
 
 from gcloud_resize import config, shell

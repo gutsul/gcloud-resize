@@ -1,7 +1,4 @@
-import re
 import subprocess
-
-from gcloud_resize.logger import info
 
 
 def run(cmd):

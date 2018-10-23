@@ -3,7 +3,7 @@ import time
 
 import requests
 from googleapiclient import discovery
-from gcloud_resize import config, shell
+from gcloud_resize import config
 from gcloud_resize.logger import error, info, debug
 from gcloud_resize.models import Disk, InstanceDetails
 
