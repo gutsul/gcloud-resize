@@ -2,15 +2,17 @@ from math import ceil
 
 import psutil
 
-from gcloud_resize import config
+from gcloud_resize import config, shell
+from gcloud_resize.logger import info, error
 
 resize = config.ResizeConfig()
 
 
 class Disk:
 
-  def __init__(self, name, index, boot):
+  def __init__(self, name, zone, index, boot):
     self._name = name
+    self._zone = zone
     self._index = index
     self._boot = boot
     self._fstype = None
@@ -40,6 +42,10 @@ class Disk:
   @property
   def name(self):
     return self._name
+
+  @property
+  def zone(self):
+    return self._zone
 
   @property
   def index(self):
@@ -78,16 +84,49 @@ class Disk:
   def percent(self):
     return self._percent
 
-  # TODO: bytes to GB
   def low(self):
-    free_percent = 100 - self.pcent
+    free_percent = 100 - self.percent
 
     if free_percent <= resize.free_limit_percent:
       return True
     else:
       return False
 
-  def increase_size(self):
-    add_gb = ceil((resize.resize_percent / 100) * self.size)
-    new_size_gb = self.size + add_gb
-    return new_size_gb
+  def apply_changes(self):
+    # Supported file systems
+    EXT4 = "ext4"
+    XFS = "xfs"
+
+    if self.fstype == EXT4:
+      shell.resize_ext4(self)
+      info("Disk '{}' [{}]: Changes have been applied successfully.".format(self.name, self.device))
+    elif self.fstype == XFS:
+      shell.resize_xfs(self)
+      info("Disk '{}' [{}]: Changes have been applied successfully.".format(self.name, self.device))
+    else:
+      error("Disk '{}' [{}]: Can't apply changes. Not supported file system '{}'.".format(self.name, self.device,                                                                                   self.fstype))
+
+
+class InstanceDetails(object):
+
+  def __init__(self):
+    self._name = None
+    self._zone = None
+    self._environment = "Unknown"
+    self._disks = []
+
+  @property
+  def name(self):
+    return self._name
+
+  @property
+  def zone(self):
+    return self._zone
+
+  @property
+  def environment(self):
+    return self._environment
+
+  @property
+  def disks(self):
+    return self._disks
