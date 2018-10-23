@@ -7,12 +7,6 @@ from gcloud_resize import rest, integrations
 from gcloud_resize.logger import info, debug
 
 
-def increase_size():
-  add_gb = ceil((resize.resize_percent / 100) * self.size)
-  new_size_gb = self.size + add_gb
-  return new_size_gb
-
-
 def main():
   instance_name = rest.get_instance_name()
   zone = rest.get_instance_zone()
@@ -31,11 +25,10 @@ def main():
       if disk.low():
         info("Disk '{}' [{}]: A disk has a low space. ".format(disk.name, disk.device))
 
-
-
-
-        rest.resize_disk(disk=disk)
+        new_size = disk.calculate_size()
+        rest.resize_disk(disk=disk, size=new_size)
         disk.apply_changes()
+
         slack.post(disk)
     else:
       debug("Disk '{}' [{}]: Disk is boot. Nothing to do.".format(disk.name, disk.device))

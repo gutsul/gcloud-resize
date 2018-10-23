@@ -20,22 +20,8 @@ class Disk:
     self._free = None
     self._percent = None
 
-    partitions = psutil.disk_partitions()
+    self.refresh()
 
-    for partition in partitions:
-      if self.device in partition:
-        print(partition)
-        self._fstype = partition.fstype
-        self._mountpoint = partition.mountpoint
-
-
-    if self._mountpoint is not None:
-      disk = psutil.disk_usage(self._mountpoint)
-
-      self._total = disk.total
-      self._used = disk.used
-      self._free = disk.free
-      self._percent = disk.percent
 
   @property
   def name(self):
@@ -102,8 +88,31 @@ class Disk:
       shell.resize_xfs(self)
       info("Disk '{}' [{}]: Changes have been applied successfully.".format(self.name, self.device))
     else:
-      error("Disk '{}' [{}]: Can't apply changes. Not supported file system '{}'.".format(self.name, self.device,                                                                                   self.fstype))
+      error("Disk '{}' [{}]: Can't apply changes. Not supported file system '{}'.".format(
+        self.name, self.device, self.fstype))
 
+  def refresh(self):
+    partitions = psutil.disk_partitions()
+
+    for partition in partitions:
+      if self.device in partition:
+        self._fstype = partition.fstype
+        self._mountpoint = partition.mountpoint
+
+    if self._mountpoint is not None:
+      disk = psutil.disk_usage(self._mountpoint)
+
+      self._total = disk.total
+      self._used = disk.used
+      self._free = disk.free
+      self._percent = disk.percent
+
+  # TODO: fix it
+  def calculate_size():
+    add_gb = ceil((resize.resize_percent / 100) * self.size)
+    new_size_gb = self.size + add_gb
+
+    return new_size_gb
 
 class InstanceDetails(object):
 

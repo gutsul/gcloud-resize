@@ -95,17 +95,16 @@ def _wait_for_operation(compute, project, zone, operation):
       return result
     time.sleep(1)
 
-
-def resize_disk(disk):
-  new_size_gb = disk.increase_size()
+# TODO Add try/catch
+def resize_disk(disk, size_gb):
 
   disks_resize_request_body = {
-    "sizeGb": new_size_gb
+    "sizeGb": size_gb
   }
 
   request = service.disks().resize(project=gcloud.project_id, zone=disk.zone, disk=disk.name, body=disks_resize_request_body)
   response = request.execute()
   result = _wait_for_operation(service, project=gcloud.project_id, zone=disk.zone, operation=response['name'])
 
-  info("Disk '{}' [{}]: Send request to resize disk from {}Gb to {}Gb. Response: {}".format(disk.name, disk.device, disk.size, new_size_gb, result))
+  info("Disk '{}' [{}]: Send request to resize disk from {}Gb to {}Gb. Response: {}".format(disk.name, disk.device, disk.size, size_gb, result))
 
