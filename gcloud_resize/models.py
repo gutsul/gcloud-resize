@@ -113,7 +113,6 @@ class Disk:
       self._free = disk.free
       self._percent = disk.percent
 
-  # TODO: fix it
   def calculate_size(self):
     add_bytes = (RESIZE_PERCENT / 100) * self._total
 

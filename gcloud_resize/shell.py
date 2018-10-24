@@ -13,17 +13,16 @@ def run(cmd):
 
   except:
     msg = 'ERROR  CMD="{0}"'.format(cmd)
-    # log(msg)
 
   return output
 
 
 def resize_ext4(disk):
-  cmd = "sudo resize2fs /dev/{0}".format(disk.device)
+  cmd = "sudo resize2fs {0}".format(disk.device)
   run(cmd)
 
 
 def resize_xfs(disk):
-  cmd = "sudo xfs_growfs /dev/{0}".format(disk.device)
+  cmd = "sudo xfs_growfs {0}".format(disk.device)
   run(cmd)
 
