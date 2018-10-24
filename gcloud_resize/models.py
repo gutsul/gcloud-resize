@@ -1,9 +1,15 @@
+import math
+
 import psutil
 
 from gcloud_resize import config, shell
 from gcloud_resize.logger import info, error
+from gcloud_resize.utils import to_GB
 
 resize = config.ResizeConfig()
+
+FREE_PERCENT = resize.free_limit_percent
+RESIZE_PERCENT = resize.resize_percent
 
 
 class Disk:
@@ -71,7 +77,7 @@ class Disk:
   def low(self):
     free_percent = 100 - self.percent
 
-    if free_percent <= resize.free_limit_percent:
+    if free_percent <= FREE_PERCENT:
       return True
     else:
       return False
@@ -108,11 +114,16 @@ class Disk:
       self._percent = disk.percent
 
   # TODO: fix it
-  def calculate_size():
-    add_gb = ceil((resize.resize_percent / 100) * self.size)
-    new_size_gb = self.size + add_gb
+  def calculate_size(self):
+    add_bytes = (RESIZE_PERCENT / 100) * self._total
 
-    return new_size_gb
+    new_total_bytes = self._total + round(add_bytes)
+    new_total_gigabytes = to_GB(new_total_bytes)
+
+    size_gb = math.ceil(new_total_gigabytes)
+
+    return size_gb
+
 
 class InstanceDetails(object):
 

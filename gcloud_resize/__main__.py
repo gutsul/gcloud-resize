@@ -25,8 +25,8 @@ def main():
       if disk.low():
         info("Disk '{}' [{}]: A disk has a low space. ".format(disk.name, disk.device))
 
-        new_size = disk.calculate_size()
-        rest.resize_disk(disk=disk, size=new_size)
+        new_size_gb = disk.calculate_size()
+        rest.resize_disk(disk=disk, size=new_size_gb)
         disk.apply_changes()
 
         slack.post(disk)

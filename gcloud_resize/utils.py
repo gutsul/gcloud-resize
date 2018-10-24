@@ -6,3 +6,8 @@ def is_root():
     return True
   else:
     return False
+
+
+def to_GB(bytes):
+  GIGABYTE = float(1 << 30)
+  return round(bytes/GIGABYTE, 2)
