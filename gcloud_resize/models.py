@@ -157,7 +157,7 @@ class InstanceDetails(object):
     self._name = value
 
   @zone.setter
-  def name(self, value):
+  def zone(self, value):
     self._zone = value
 
   @environment.setter
@@ -165,5 +165,5 @@ class InstanceDetails(object):
     self._environment = value
 
   @disks.setter
-  def name(self, value):
+  def disks(self, value):
     self._disks = value
