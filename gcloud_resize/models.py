@@ -74,6 +74,10 @@ class Disk:
   def percent(self):
     return self._percent
 
+  @name.setter
+  def name(self, value):
+    self._name = value
+
   def low(self):
     free_percent = 100 - self.percent
 
@@ -147,3 +151,15 @@ class InstanceDetails(object):
   @property
   def disks(self):
     return self._disks
+
+  @name.setter
+  def name(self, value):
+    self._name = value
+
+  @environment.setter
+  def environmnt(self, value):
+    self._environment = value
+
+  @disks.setter
+  def name(self, value):
+    self._disks = value
