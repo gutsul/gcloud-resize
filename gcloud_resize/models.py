@@ -161,7 +161,7 @@ class InstanceDetails(object):
     self._zone = value
 
   @environment.setter
-  def environmnt(self, value):
+  def environment(self, value):
     self._environment = value
 
   @disks.setter
