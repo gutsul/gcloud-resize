@@ -156,6 +156,10 @@ class InstanceDetails(object):
   def name(self, value):
     self._name = value
 
+  @zone.setter
+  def name(self, value):
+    self._zone = value
+
   @environment.setter
   def environmnt(self, value):
     self._environment = value
