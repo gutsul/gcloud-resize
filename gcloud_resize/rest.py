@@ -106,5 +106,5 @@ def resize_disk(disk, size_gb):
   response = request.execute()
   result = _wait_for_operation(service, project=gcloud.project_id, zone=disk.zone, operation=response['name'])
 
-  info("Disk '{}' [{}]: Send request to resize disk from {}Gb to {}Gb. Response: {}".format(disk.name, disk.device, disk.size, size_gb, result))
+  info("Disk '{}' [{}]: Send request to resize disk to {}Gb. Response: {}".format(disk.name, disk.device, size_gb, result))
 
