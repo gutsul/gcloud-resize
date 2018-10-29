@@ -120,4 +120,7 @@ class SlackConfig(Config):
 
   @users.setter
   def users(self, value):
-    self._users = str(value).split(sep=",")
+    if value == "":
+      self._users = None
+    else:
+      self._users = str(value).split(sep=",")
