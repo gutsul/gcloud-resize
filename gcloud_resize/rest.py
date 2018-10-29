@@ -1,8 +1,11 @@
+import json
 import re
 import time
 
 import requests
 from googleapiclient import discovery
+from googleapiclient.errors import HttpError
+
 from gcloud_resize import config
 from gcloud_resize.logger import error, info, debug
 from gcloud_resize.models import Disk, InstanceDetails
@@ -65,18 +68,29 @@ def _get_attached_disks(json, zone):
   return disks
 
 
-# TODO: Add try/accept and error msg.
 def get_instance_details(name, zone):
   request = service.instances().get(project=gcloud.project_id, zone=zone, instance=name)
-  response = request.execute()
-
-  debug("get_instance_details: {}".format(response))
-
   instance = InstanceDetails()
-  instance.name = name
-  instance.zone = zone
-  instance.environment = _get_environment(json=response)
-  instance.disks = _get_attached_disks(json=response, zone=zone)
+
+  try:
+    response = request.execute()
+
+    instance.name = name
+    instance.zone = zone
+    instance.environment = _get_environment(json=response)
+    instance.disks = _get_attached_disks(json=response, zone=zone)
+
+  except HttpError as err:
+    content = err.content.decode("utf-8")
+    data = json.loads(content)
+
+    status = data["error"]["code"]
+    message = data["error"]["message"]
+
+    if message == "Insufficient Permission":
+      error("{} Virtual machine hasn`t read/write permissions for Compute Engine API.".format(status))
+    else:
+      error(err)
 
   return instance
 
