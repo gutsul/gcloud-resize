@@ -16,8 +16,11 @@ class Slack(object):
 
   def _add_users(self):
     users_list = ""
-    for user in slack.users:
-      users_list += "<@{}> ".format(user)
+
+    if slack.users:
+      for user in slack.users:
+        users_list += "<@{}> ".format(user)
+
     return users_list
 
   def post(self, disk):
