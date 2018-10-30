@@ -15,10 +15,10 @@ def default(args):
   for disk in instance.disks:
 
     if not disk.boot:
-      debug("Disk {name} (device) is not boot.".format(name=disk.name, device=disk.device))
+      debug("Disk {name} ({device}) is not boot.".format(name=disk.name, device=disk.device))
 
       if disk.low():
-        info("A disk {name} (device) has a low space. ".format(name=disk.name, device=disk.device))
+        info("A disk {name} ({device}) has a low space. ".format(name=disk.name, device=disk.device))
 
         new_size_gb = disk.calculate_size()
         old_size_gb = to_GB(disk.total)
@@ -28,7 +28,7 @@ def default(args):
 
         slack.post(disk_name=disk.name, new_size_gb=new_size_gb, old_size_gb=old_size_gb)
     else:
-      debug("Disk {name} (device) is boot. Nothing to do.".format(name=disk.name, device=disk.device))
+      debug("Disk {name} ({device}) is boot. Nothing to do.".format(name=disk.name, device=disk.device))
 
 
 def parse_args():
