@@ -8,7 +8,7 @@ from gcloud_resize.utils import to_GB
 
 resize = config.ResizeConfig()
 
-FREE_PERCENT = resize.free_limit_percent
+USAGE_PERCENT = resize.usage_percent
 RESIZE_PERCENT = resize.resize_percent
 
 
@@ -79,9 +79,7 @@ class Disk:
     self._name = value
 
   def low(self):
-    free_percent = 100 - self.percent
-
-    if free_percent <= FREE_PERCENT:
+    if self.percent >= USAGE_PERCENT:
       return True
     else:
       return False

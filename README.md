@@ -65,10 +65,10 @@ It consist from 3 general parts: `GCloud Settings`, `Resize Settings`, `Slack Se
 
 ### Resize Settings
 
-| Key                | Value   | Type     | Description                                                                                      |
-| :----------------- | ------- | :------: | ------------------------------------------------------------------------------------------------ |
-| `FreeLimitPercent` | _5_     | Required | Indicates available disc space threshold at which disc space will be automatically increased.<br>The value should be greater than zero. |
-| `ResizePercent`    | _10_    | Required | Determines how much in percentage you should increase the disk when low disk space amount is detected. <br> The value should be greater than `FreeLimitPercent`.<br>The minimum disk space you can add is **1 GB**.|
+| Key            | Value | Type     | Description                                                                                      |
+| :------------- | ----- | :------: | ------------------------------------------------------------------------------------------------ |
+| `UsagePercent` | _95_  | Required | Resize disk when disk usage more or equal UsagePercent value.<br>The value should be greater than zero. |
+| `ResizePercent`| _10_  | Required | Determines how much in percentage you should increase the disk when low disk space amount is detected. <br>The minimum disk space you can add is **1 GB**.|
 
 ### Slack Settings
 
