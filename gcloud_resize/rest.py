@@ -7,14 +7,12 @@ from googleapiclient import discovery
 from googleapiclient.errors import HttpError
 
 from gcloud_resize import config
-from gcloud_resize.logger import error, info, debug
+from gcloud_resize.logger import error, info
 from gcloud_resize.models import Disk, InstanceDetails
 
 gcloud = config.GCloudConfig()
 
-service = discovery.build('compute', 'v1')
 
-# TODO: add try/catch
 def get_instance_name():
   url = "http://metadata.google.internal/computeMetadata/v1/instance/name"
   metadata_headers = {'Metadata-Flavor': 'Google'}
@@ -22,14 +20,13 @@ def get_instance_name():
   resp = requests.get(url=url, headers=metadata_headers)
 
   if resp.status_code != 200:
-    error("Cannot get instance name. Response status code is {}".format(resp.status_code))
+    error("{status} Cannot get instance name.".format(status=resp.status_code))
     exit(1)
 
   name = resp.text
-
   return name
 
-# TODO: add try/catch
+
 def get_instance_zone():
   url = "http://metadata.google.internal/computeMetadata/v1/instance/zone"
   metadata_headers = {'Metadata-Flavor': 'Google'}
@@ -37,7 +34,7 @@ def get_instance_zone():
   resp = requests.get(url=url, headers=metadata_headers)
 
   if resp.status_code != 200:
-    error("Cannot get instance zone. Response status code is {}".format(resp.status_code))
+    error("{status} Cannot get instance zone.".format(status=resp.status_code))
     exit(1)
 
   regex = re.compile("(?:\w|-)+$")
@@ -69,6 +66,7 @@ def _get_attached_disks(json, zone):
 
 
 def get_instance_details(name, zone):
+  service = discovery.build('compute', 'v1')
   request = service.instances().get(project=gcloud.project_id, zone=zone, instance=name)
   instance = InstanceDetails()
 
@@ -91,6 +89,7 @@ def get_instance_details(name, zone):
       error("{} Virtual machine hasn`t read/write permissions for Compute Engine API.".format(status))
     else:
       error(err)
+    exit(1)
 
   return instance
 
@@ -101,24 +100,29 @@ def _wait_for_operation(compute, project, zone, operation):
       project=project,
       zone=zone,
       operation=operation).execute()
-    status = result['status']
-    debug("Wait for operation from GCloud API. Response: {}".format(result))
-    if status == 'DONE':
+
+    if result['status'] == 'DONE':
       if 'error' in result:
         raise Exception(result['error'])
       return result
+
     time.sleep(1)
 
-# TODO Add try/catch
+
 def resize_disk(disk, size_gb):
+  info("Send request to resize disk {name} ({device}) to {size} GB."
+       .format(name=disk.name, device=disk.device, size=size_gb))
 
   disks_resize_request_body = {
     "sizeGb": size_gb
   }
 
-  request = service.disks().resize(project=gcloud.project_id, zone=disk.zone, disk=disk.name, body=disks_resize_request_body)
-  response = request.execute()
-  result = _wait_for_operation(service, project=gcloud.project_id, zone=disk.zone, operation=response['name'])
-
-  info("Disk '{}' [{}]: Send request to resize disk to {}Gb. Response: {}".format(disk.name, disk.device, size_gb, result))
-
+  service = discovery.build('compute', 'v1')
+  request = service.disks().resize(project=gcloud.project_id, zone=disk.zone,
+                                   disk=disk.name, body=disks_resize_request_body)
+  try:
+    response = request.execute()
+    _wait_for_operation(service, project=gcloud.project_id, zone=disk.zone, operation=response['name'])
+  except HttpError as err:
+    error(err)
+    exit(1)

@@ -91,13 +91,14 @@ class Disk:
 
     if self.fstype == EXT4:
       shell.resize_ext4(self)
-      info("Disk '{}' [{}]: Changes have been applied successfully.".format(self.name, self.device))
     elif self.fstype == XFS:
       shell.resize_xfs(self)
-      info("Disk '{}' [{}]: Changes have been applied successfully.".format(self.name, self.device))
     else:
-      error("Disk '{}' [{}]: Can't apply changes. Not supported file system '{}'.".format(
-        self.name, self.device, self.fstype))
+      error("Can't apply changes for disk {name} ({device}). Not supported file system '{fstype}'."
+        .format(name=self.name, device=self.device, fstype=self.fstype))
+      exit(1)
+
+    info("Changes have been applied successfully for disk {name} ({device})".format(name=self.name, device=self.device))
 
   def refresh(self):
     partitions = psutil.disk_partitions()
@@ -131,7 +132,7 @@ class InstanceDetails(object):
   def __init__(self):
     self._name = None
     self._zone = None
-    self._environment = "Unknown"
+    self._environment = None
     self._disks = []
 
   @property
