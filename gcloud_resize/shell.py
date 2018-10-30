@@ -1,20 +1,17 @@
 import subprocess
+from logging import error
 
 
 def run(cmd):
-  output = None
+  stdout = None
+  stderr = None
 
   try:
     proc = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    output, error = proc.communicate()
-
-    output = output.decode("utf-8")
-    error = error.decode("utf-8")
-
+    stdout, stderr = proc.communicate()
   except:
-    msg = 'ERROR  CMD="{0}"'.format(cmd)
-
-  return output
+    error(stdout.decode("utf-8"))
+    exit(1)
 
 
 def resize_ext4(disk):
