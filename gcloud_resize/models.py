@@ -98,7 +98,7 @@ class Disk:
         .format(name=self.name, device=self.device, fstype=self.fstype))
       exit(1)
 
-    info("Changes have been applied successfully for disk {name} ({device})".format(self.name, self.device))
+    info("Changes have been applied successfully for disk {name} ({device})".format(name=self.name, device=self.device))
 
   def refresh(self):
     partitions = psutil.disk_partitions()
