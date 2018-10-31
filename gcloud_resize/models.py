@@ -8,7 +8,7 @@ from gcloud_resize.utils import to_GB
 
 resize = config.ResizeConfig()
 
-FREE_PERCENT = resize.free_limit_percent
+USAGE_PERCENT = resize.usage_percent
 RESIZE_PERCENT = resize.resize_percent
 
 
@@ -79,9 +79,7 @@ class Disk:
     self._name = value
 
   def low(self):
-    free_percent = 100 - self.percent
-
-    if free_percent <= FREE_PERCENT:
+    if self.percent >= USAGE_PERCENT:
       return True
     else:
       return False
@@ -93,13 +91,14 @@ class Disk:
 
     if self.fstype == EXT4:
       shell.resize_ext4(self)
-      info("Disk '{}' [{}]: Changes have been applied successfully.".format(self.name, self.device))
     elif self.fstype == XFS:
       shell.resize_xfs(self)
-      info("Disk '{}' [{}]: Changes have been applied successfully.".format(self.name, self.device))
     else:
-      error("Disk '{}' [{}]: Can't apply changes. Not supported file system '{}'.".format(
-        self.name, self.device, self.fstype))
+      error("Can't apply changes for disk {name} ({device}). Not supported file system '{fstype}'."
+        .format(name=self.name, device=self.device, fstype=self.fstype))
+      exit(1)
+
+    info("Changes have been applied successfully for disk {name} ({device})".format(name=self.name, device=self.device))
 
   def refresh(self):
     partitions = psutil.disk_partitions()
@@ -133,7 +132,7 @@ class InstanceDetails(object):
   def __init__(self):
     self._name = None
     self._zone = None
-    self._environment = "Unknown"
+    self._environment = None
     self._disks = []
 
   @property

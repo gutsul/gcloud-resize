@@ -51,24 +51,24 @@ class ResizeConfig(Config):
 
   def __init__(self):
     Config.__init__(self)
-    self.free_limit_percent = self.get_property(section=self._section, name="FreeLimitPercent")
+    self.usage_percent = self.get_property(section=self._section, name="UsagePercent")
     self.resize_percent = self.get_property(section=self._section, name="ResizePercent")
 
   @property
-  def free_limit_percent(self):
-    return self._free_limit_percent
+  def usage_percent(self):
+    return self._usage_percent
 
-  @free_limit_percent.setter
-  def free_limit_percent(self, value):
+  @usage_percent.setter
+  def usage_percent(self, value):
     try:
-      if int(value) < 0 or int(value) >= 100:
-        error("FreeLimitPercent value must be a number in diapazone 0-99")
+      if int(value) < 1 or int(value) > 100:
+        error("UsagePercent value must be a number in diapazone 1-100")
         exit(1)
       else:
-        self._free_limit_percent = int(value)
+        self._usage_percent = int(value)
 
     except ValueError:
-      error("FreeLimitPercent value mast be a number")
+      error("UsagePercent value mast be a number")
       exit(1)
 
   @property
@@ -103,16 +103,17 @@ class SlackConfig(Config):
 
   @webhook.setter
   def webhook(self, value):
-
     if value != "":
       regex = re.compile("^(?:http)s?:\/\/hooks.slack.com\/services\/[\d\w]{9}\/[\d\w]{9}\/[\d\w]{24}", re.IGNORECASE)
       webhook = re.match(regex, value)
 
       if webhook is None:
         error("Slack webhook not valid.")
-        exit(1)
-
-    self._webhook = value
+        self._webhook = None
+      else:
+        self._webhook = value
+    else:
+      self._webhook = None
 
   @property
   def users(self):

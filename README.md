@@ -1,4 +1,4 @@
-# GCloud resize tool v0.9.4
+# GCloud resize tool v0.9.7
 
 `gcloud-resize` is tool that can automatically resize persistent disks on **Google Cloud Platform**.
 <br>This tool supports the next filesystems: **ext4**, **xfs**.
@@ -65,10 +65,10 @@ It consist from 3 general parts: `GCloud Settings`, `Resize Settings`, `Slack Se
 
 ### Resize Settings
 
-| Key                | Value   | Type     | Description                                                                                      |
-| :----------------- | ------- | :------: | ------------------------------------------------------------------------------------------------ |
-| `FreeLimitPercent` | _5_     | Required | Indicates available disc space threshold at which disc space will be automatically increased.<br>The value should be greater than zero. |
-| `ResizePercent`    | _10_    | Required | Determines how much in percentage you should increase the disk when low disk space amount is detected. <br> The value should be greater than `FreeLimitPercent`.<br>The minimum disk space you can add is **1 GB**.|
+| Key            | Value | Type     | Description                                                                                      |
+| :------------- | ----- | :------: | ------------------------------------------------------------------------------------------------ |
+| `UsagePercent` | _95_  | Required | Resize disk when disk usage more or equal UsagePercent value.<br>The value should be greater than zero. |
+| `ResizePercent`| _10_  | Required | Determines how much in percentage you should increase the disk when low disk space amount is detected. <br>The minimum disk space you can add is **1 GB**.|
 
 ### Slack Settings
 
@@ -91,6 +91,20 @@ sudo crontab -e
 # Check persistent disks 
 0 * * * * /usr/local/bin/gcloud-resize
 ```
+
+### Calculate crontab job frequency
+
+To calculate frequency _(f)_ use next formula:
+```json
+f = (T * r) / (2 * w )
+```
+Where:
+- _T_ Total disk size in MB.
+- _r_ Resize percent value. (5% = 0.05)
+- _w_ Write rate in MB per minute
+
+The result of the calculation means to run crontab job at least every _f_ minutes. 
+
 
 ## Logs
 

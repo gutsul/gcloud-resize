@@ -3,7 +3,6 @@ import requests
 
 from gcloud_resize import config
 from gcloud_resize.logger import info, error
-from gcloud_resize.utils import to_GB
 
 slack = config.SlackConfig()
 
@@ -23,14 +22,12 @@ class Slack(object):
 
     return users_list
 
-  def post(self, disk):
+  def post(self, disk_name, new_size_gb, old_size_gb):
     title = "Disk resize"
     users = self._add_users()
 
-    new_size_gb = disk.calculate_size()
-    old_size_gb = to_GB(disk.total)
-
-    message = "Disk *{}* increased to _{}GB_ _( ~{}GB~ )_.".format(disk.name, new_size_gb, old_size_gb)
+    message = "Disk *{name}* increased to _{new_size}GB_ _( ~{old_size}GB~ )_."\
+      .format(name=disk_name, new_size=new_size_gb, old_size=old_size_gb)
 
     payload = {
       "attachments": [
@@ -59,16 +56,10 @@ class Slack(object):
       ]
     }
 
-    if slack.webhook != "":
-
+    if slack.webhook:
       r = requests.post(slack.webhook, data=json.dumps(payload))
 
       if r.status_code == 200:
-        info("Disk '{}' [{}]: Slack message send successfully.".format(disk.name, disk.device))
+        info("Slack message send successfully.")
       else:
-        error("Disk '{}' [{}]: Can't send message to SLACK. Response: {}".format(disk.name, disk.device, r.text))
-
-
-
-
-
+        error("{status} Can't send message to Slack.".format(r.status_code))
