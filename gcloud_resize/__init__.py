@@ -1,4 +1,4 @@
-__version__ = '0.9.4'
+__version__ = '0.9.7'
 name = "gcloud-resize"
 
 CONF_DIR = "/etc/{}".format(name)

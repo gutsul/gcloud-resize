@@ -1,4 +1,4 @@
-# GCloud resize tool v0.9.4
+# GCloud resize tool v0.9.7
 
 `gcloud-resize` is tool that can automatically resize persistent disks on **Google Cloud Platform**.
 <br>This tool supports the next filesystems: **ext4**, **xfs**.
