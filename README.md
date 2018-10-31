@@ -92,6 +92,20 @@ sudo crontab -e
 0 * * * * /usr/local/bin/gcloud-resize
 ```
 
+### Calculate crontab job frequency
+
+To calculate frequency _(f)_ use next formula:
+```json
+f = (T * r) / (2 * w )
+```
+Where:
+- _T_ Total disk size in MB.
+- _r_ Resize percent value. (5% = 0.05)
+- _w_ Write rate in MB per minute
+
+The result of the calculation means to run crontab job at least every _f_ minutes. 
+
+
 ## Logs
 
 Log file located in `/var/log/gcloud-resize/gcloud-resize.log`
