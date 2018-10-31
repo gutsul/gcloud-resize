@@ -1,7 +1,8 @@
-
 from setuptools import find_packages
-from gcloud_resize import __version__, name, CONF_DIR, LOG_DIR
+
+from gcloud_resize import __version__, name, APP_HOME, LOG_DIR, shell
 from setuptools import setup
+
 
 setup(
   name = name,
@@ -19,7 +20,7 @@ setup(
     'pyasn1-modules==0.2.2'
   ],
   data_files = [
-    (CONF_DIR, ['gcloud_resize/conf/gcloud-resize.conf']),
+    (APP_HOME, ['gcloud_resize/conf/gcloud-resize.conf']),
     (LOG_DIR, [])
   ],
   entry_points = {

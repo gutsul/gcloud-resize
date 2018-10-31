@@ -1,11 +1,11 @@
 import configparser
 import re
 
-from . import CONFIG_FILENAME
+from . import CONFIG
 from .logger import error
 
 config = configparser.ConfigParser()
-config.read(CONFIG_FILENAME)
+config.read(CONFIG)
 
 
 class Config(object):
