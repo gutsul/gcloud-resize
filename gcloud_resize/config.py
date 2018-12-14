@@ -2,7 +2,7 @@ import configparser
 import re
 
 from . import CONFIG
-from .logger import error
+from .logger import error, info
 
 config = configparser.ConfigParser()
 config.read(CONFIG)
@@ -49,10 +49,68 @@ class GCloudConfig(Config):
 class ResizeConfig(Config):
   _section = "Resize Settings"
 
+  MODE_FIXED = "fixed"
+  MODE_PERCENT = "percent"
+  ALLOWED_RESIZE_MODES = [ MODE_FIXED, MODE_PERCENT]
+
   def __init__(self):
     Config.__init__(self)
+
+    self.resize_mode = self.get_property(section=self._section, name="ResizeMode")
+    self.free_size = self.get_property(section=self._section, name="FixedFreeSize")
+    self.increase_size = self.get_property(section=self._section, name="FixedIncreaseSize")
     self.usage_percent = self.get_property(section=self._section, name="UsagePercent")
     self.resize_percent = self.get_property(section=self._section, name="ResizePercent")
+
+
+  @property
+  def resize_mode(self):
+    return self._resize_mode
+
+  @resize_mode.setter
+  def resize_mode(self, value):
+
+    if value in self.ALLOWED_RESIZE_MODES:
+      self._resize_mode = value
+    else:
+      info("ResizeMode '{value}' not supported. Using default resize mode: fixed.".format(value=value))
+      self._resize_mode = self.MODE_FIXED
+
+
+  @property
+  def free_size(self):
+    return self._free_size
+
+  @free_size.setter
+  def free_size(self, value):
+    try:
+      if int(value) < 1 or int(value) > 1024:
+        error("FixedFreeSize value must be a number greater than 0")
+        exit(1)
+      else:
+        self._free_size = int(value)
+
+    except ValueError:
+      error("FixedFreeSize value mast be a number")
+      exit(1)
+
+  @property
+  def increase_size(self):
+    return self._increase_size
+
+  @increase_size.setter
+  def increase_size(self, value):
+    try:
+      if int(value) < 1 or int(value) > 1024:
+        error("FixedFreeSize value must be a number greater than 0")
+        exit(1)
+      else:
+        self._increase_size = int(value)
+
+    except ValueError:
+      error("FixedIncreaseSize value mast be a number")
+      exit(1)
+
 
   @property
   def usage_percent(self):
