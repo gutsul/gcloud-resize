@@ -4,9 +4,14 @@ import psutil
 
 from gcloud_resize import config, shell
 from gcloud_resize.logger import info, error
-from gcloud_resize.utils import to_GB
+from gcloud_resize.utils import to_GB, GIGABYTE
 
 resize = config.ResizeConfig()
+
+RESIZE_MODE = resize.resize_mode
+
+FREE_SIZE = resize.free_size
+INCREASE_SIZE = resize.increase_size
 
 USAGE_PERCENT = resize.usage_percent
 RESIZE_PERCENT = resize.resize_percent
@@ -27,7 +32,6 @@ class Disk:
     self._percent = None
 
     self.refresh()
-
 
   @property
   def name(self):
@@ -79,10 +83,22 @@ class Disk:
     self._name = value
 
   def low(self):
-    if self.percent >= USAGE_PERCENT:
-      return True
+
+    if RESIZE_MODE == resize.MODE_FIXED:
+      if to_GB(self.free) <= FREE_SIZE:
+        return True
+      else:
+        return False
+
+    elif RESIZE_MODE == resize.MODE_PERCENT:
+      if self.percent >= USAGE_PERCENT:
+        return True
+      else:
+        return False
     else:
-      return False
+      error("Not supported resize mode: '{mode}'.".format(mode=RESIZE_MODE))
+      exit(1)
+
 
   def apply_changes(self):
     # Supported file systems
@@ -117,7 +133,13 @@ class Disk:
       self._percent = disk.percent
 
   def calculate_size(self):
-    add_bytes = (RESIZE_PERCENT / 100) * self._total
+    add_bytes = 0
+
+    if RESIZE_MODE == resize.MODE_FIXED:
+      add_bytes = INCREASE_SIZE * GIGABYTE
+
+    elif RESIZE_MODE == resize.MODE_PERCENT:
+      add_bytes = (RESIZE_PERCENT / 100) * self._total
 
     new_total_bytes = self._total + round(add_bytes)
     new_total_gigabytes = to_GB(new_total_bytes)

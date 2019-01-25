@@ -1,5 +1,6 @@
 from os import getuid
 
+GIGABYTE = float(1 << 30)
 
 def is_root():
   if getuid() == 0:
@@ -9,5 +10,4 @@ def is_root():
 
 
 def to_GB(bytes):
-  GIGABYTE = float(1 << 30)
   return round(bytes/GIGABYTE, 2)
