@@ -1,4 +1,4 @@
-# GCloud resize tool v0.9.7
+# GCloud resize tool v1.0.0
 
 `gcloud-resize` is tool that can automatically resize persistent disks on **Google Cloud Platform**.
 <br>This tool supports the next filesystems: **ext4**, **xfs**.
@@ -53,7 +53,7 @@ sudo python3 setup.py install
 
 ## Configuration
 
-General configuration file located in `/etc/gcloud-resize/gcloud-resize.conf`.
+General configuration file located in `~/.gcloud-resize/gcloud-resize.conf`.
 It consist from 3 general parts: `GCloud Settings`, `Resize Settings`, `Slack Settings`.
 
 
@@ -65,10 +65,13 @@ It consist from 3 general parts: `GCloud Settings`, `Resize Settings`, `Slack Se
 
 ### Resize Settings
 
-| Key            | Value | Type     | Description                                                                                      |
-| :------------- | ----- | :------: | ------------------------------------------------------------------------------------------------ |
-| `UsagePercent` | _95_  | Required | Resize disk when disk usage more or equal UsagePercent value.<br>The value should be greater than zero. |
-| `ResizePercent`| _10_  | Required | Determines how much in percentage you should increase the disk when low disk space amount is detected. <br>The minimum disk space you can add is **1 GB**.|
+| Key                 | Value   | Type     | Description                                                                                      |
+| :------------------ | ------- | :------: | ------------------------------------------------------------------------------------------------ |
+| `ResizeMode`        | _fixed_ | Required | Available resize modes: **fixed**, **percent** |
+| `FixedFreeSize`     | _1_     | Required | Fixed resize mode setting only.<br>Resize disk when there is less or equal than `FixedFreeSize` GB. |
+| `FixedIncreaseSize` | _1_     | Required | Add to disk additional `FixedIncreaseSize` GB. |
+| `UsagePercent`      | _95_    | Required | Resize disk when disk usage more or equal UsagePercent value.<br>The value should be greater than zero. |
+| `ResizePercent`     | _10_    | Required | Determines how much in percentage you should increase the disk when low disk space amount is detected. <br>The minimum disk space you can add is **1 GB**.|
 
 ### Slack Settings
 
@@ -108,7 +111,7 @@ The result of the calculation means to run crontab job at least every _f_ minute
 
 ## Logs
 
-Log file located in `/var/log/gcloud-resize/gcloud-resize.log`
+Log file located in `~/.gcloud-resize/logs/gcloud-resize.log`
 
 ## Uninstall
 
@@ -117,6 +120,5 @@ To completely remove gcloud-resize tool run those commands in terminal:
 ```bash
 sudo pip3 uninstall gcloud-resize
 sudo rm /usr/local/bin/gcloud-resize
-sudo rm -rf /etc/gcloud-resize/
-sudo rm -rf /var/log/gcloud-resize/
+sudo rm -rf ~/.gcloud-resize/
 ```

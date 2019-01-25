@@ -1,6 +1,6 @@
 import argparse
 
-from gcloud_resize.utils import to_GB
+from gcloud_resize.utils import to_GB, is_root
 
 
 def default(args):
@@ -45,5 +45,8 @@ def parse_args():
 
 
 def main():
-  args = parse_args()
-  args.func(args)
+  if is_root():
+    args = parse_args()
+    args.func(args)
+  else:
+    exit("\nYou need root permissions to can run this script\n")
